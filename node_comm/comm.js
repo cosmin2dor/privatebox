@@ -38,7 +38,7 @@ let vpn_port = constants.DEFAULTS.VPN_PORT
 const start = async () => {
     try {
         // TODO Fastify should listen on eth only
-        await fastify.listen(comm_port, '127.0.0.1')
+        await fastify.listen(comm_port, '0.0.0.0')
     } catch (err) {
         // TODO Verify if error is related to busy port and randomize the port
         fastify.log.error(err)
@@ -109,6 +109,7 @@ async function send_init() {
                 return "Unknown"
             }
         })(),
+        pubKey: "4ObAM0rffIX/yrRAO5jF/NlQGNnXZt346vMPBzcLB20=",
         comm_port: comm_port,
         vpn_port: vpn_port,
         extra: 0.1
