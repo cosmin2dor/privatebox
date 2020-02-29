@@ -45,8 +45,15 @@ async function setup_wg() {
         }
     })
 
+    print("wg0.conf wrote")
+
     exec('wg-quick down wg0')
+
+    print('wg-quick down wg0')
+
     exec('wg-quick up wg0')
+
+    print('wg-quick up wg0')
 }
 
 module.exports.setup_wg = setup_wg

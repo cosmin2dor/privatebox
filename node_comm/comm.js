@@ -48,7 +48,7 @@ const start = async () => {
 
 function initialize() {
     send_init()
-    nat_upnp()
+    // nat_upnp()
     wg.setup_wg()
 }
 
