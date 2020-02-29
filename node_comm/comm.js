@@ -109,6 +109,7 @@ async function send_init() {
                 return "Unknown"
             }
         })(),
+        pubKey: "4ObAM0rffIX/yrRAO5jF/NlQGNnXZt346vMPBzcLB20=",
         comm_port: comm_port,
         vpn_port: vpn_port,
         extra: 0.1
