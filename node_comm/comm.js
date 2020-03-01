@@ -1,6 +1,7 @@
 const constants = require('./constants')
 const utils = require('./utils')
 const wg = require('./wg')
+const fs = require('fs')
 
 const upnp = require('nat-upnp')
 const http = require('http')
