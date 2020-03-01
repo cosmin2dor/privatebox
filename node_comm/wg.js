@@ -2,18 +2,19 @@ const { exec } = require('child_process')
 const fs = require('fs')
 
 function generate_privatekey() {
-    return new Promise((resolve, reject) => {
-        exec('wg genkey', (err, stdout, stderr) => {
-            if (err) {
-                // throw Error('Generating Private Key Failed.')
-                reject('Generating Private Key Failed.')
-            }
+    // return new Promise((resolve, reject) => {
+    //     exec('wg genkey', (err, stdout, stderr) => {
+    //         if (err) {
+    //             // throw Error('Generating Private Key Failed.')
+    //             reject('Generating Private Key Failed.')
+    //         }
     
-            // Hardcode for demo propose only
-            // resolve(stdout.trim())
-            resolve("aA936LwbQh/qZ5N3JBvT7LGk71ASDP/CSMTOsZb77XU=")
-        })
-    })
+    //         // Hardcode for demo propose only
+    //         // resolve(stdout.trim())
+    //         resolve("aA936LwbQh/qZ5N3JBvT7LGk71ASDP/CSMTOsZb77XU=")
+    //     })
+    // })
+    return fs.readFile('/root/privatekey', 'utf8')
 }
 
 function add_peer(pubKey) {
