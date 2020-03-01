@@ -14,7 +14,7 @@ function generate_privatekey() {
     //         resolve("aA936LwbQh/qZ5N3JBvT7LGk71ASDP/CSMTOsZb77XU=")
     //     })
     // })
-    return fs.readFile('/root/privatekey', 'utf8')
+    return fs.readFileSync('/root/privatekey', 'utf8').trim()
 }
 
 function add_peer(pubKey) {

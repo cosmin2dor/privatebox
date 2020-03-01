@@ -99,6 +99,10 @@ function nat_upnp() {
     return ret;
 }
 
+function get_publickey() {
+    return fs.readFileSync('/root/publickey', 'utf8').trim()
+}
+
 async function send_init() {
     const data = JSON.stringify({
         external_ip: await (async () => {
@@ -109,7 +113,7 @@ async function send_init() {
                 return "Unknown"
             }
         })(),
-        pubKey: "4ObAM0rffIX/yrRAO5jF/NlQGNnXZt346vMPBzcLB20=",
+        pubKey: get_publickey(),
         comm_port: comm_port,
         vpn_port: vpn_port,
         extra: 0.1
