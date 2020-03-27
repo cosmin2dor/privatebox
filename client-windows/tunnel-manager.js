@@ -12,7 +12,7 @@ PrivateKey = ${client_privateKey}
 PublicKey = ${server_pubKey}
 Endpoint = ${server_endpoint}:${server_port}
 AllowedIPs = 0.0.0.0/0
-PersistantKeepalive = 30`
+PersistentKeepalive = 30`
 
     fs.writeFileSync("wg.conf", template)
 }
