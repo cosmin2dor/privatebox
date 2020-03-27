@@ -4,14 +4,15 @@ const fs = require('fs')
 
 function gen_wg_conf(client_privateKey, server_pubKey, server_endpoint, server_port, client_address) {
     template = `[Interface]
-Address = ${client_address}
+Address = ${client_address}/24
 DNS = 8.8.8.8
 PrivateKey = ${client_privateKey}
 
 [Peer]
 PublicKey = ${server_pubKey}
 Endpoint = ${server_endpoint}:${server_port}
-AllowedIPs = 0.0.0.0/0`
+AllowedIPs = 0.0.0.0/0
+PersistantKeepalive = 30`
 
     fs.writeFileSync("wg.conf", template)
 }
