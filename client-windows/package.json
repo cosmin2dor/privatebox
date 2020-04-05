@@ -1,0 +1,17 @@
+{
+  "name": "client-windows",
+  "version": "0.0.1",
+  "description": "Windows VPN Client for TunnelPeer Network",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Cosmin Tudor",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^8.2.0"
+  },
+  "dependencies": {
+    "electron-updater": "^4.2.5"
+  }
+}
