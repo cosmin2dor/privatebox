@@ -2,7 +2,6 @@ import datetime
 import jwt
 
 from project.server import app, db
-#from project.server import app_bcrypt
 
 
 class User(db.Model):
@@ -10,13 +9,13 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    token = db.Column(db.String(255), unique=True, nullable=False)
+    unique_id = db.Column(db.String(255), unique=True, nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
 
-    def __init__(self, token, admin=False):
+    def __init__(self, unique_id, admin=False):
         self.registered_on = datetime.datetime.now()
-        self.token = token
+        self.unique_id = unique_id
         self.admin = admin
 
     def encode_auth_token(self, user_id):
@@ -26,7 +25,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24),
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }

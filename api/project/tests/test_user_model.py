@@ -8,7 +8,7 @@ from project.tests.base import BaseTestCase
 class TestUserModel(BaseTestCase):
     def test_encode_auth_token(self):
         user = User(
-            token='token_test'
+            unique_id='token_test'
         )
         db.session.add(user)
         db.session.commit()
@@ -17,7 +17,7 @@ class TestUserModel(BaseTestCase):
 
     def test_decode_auth_token(self):
         user = User(
-            token='token_test'
+            unique_id='token_test'
         )
         db.session.add(user)
         db.session.commit()

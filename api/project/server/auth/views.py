@@ -2,11 +2,28 @@
 
 from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
+import secrets
 
-from project.server import app_bcrypt, db
+from project.server import db
 from project.server.models import User, BlacklistToken
 
 auth_blueprint = Blueprint('auth', __name__)
+
+
+class GenerateAPI(MethodView):
+    """
+    Unique Code Generator
+    """
+
+    def get(self):
+        my_secure_rng = secrets.SystemRandom()
+        unique_id = my_secure_rng.randrange(int(16 * '1'), int(16 * '9'))
+        response_object = {
+            'status': 'success',
+            'message': 'Successfully generated user unique id.',
+            'unique_id': unique_id
+        }
+        return make_response(jsonify(response_object)), 200
 
 
 class RegisterAPI(MethodView):
@@ -19,11 +36,11 @@ class RegisterAPI(MethodView):
         # get the post data
         post_data = request.get_json()
         # check if user already exists
-        user = User.query.filter_by(token=post_data.get('token')).first()
+        user = User.query.filter_by(unique_id=post_data.get('unique_id')).first()
         if not user:
             try:
                 user = User(
-                    token=post_data.get('token')
+                    unique_id=post_data.get('unique_id')
                 )
 
                 # insert the user
@@ -55,13 +72,14 @@ class LoginAPI(MethodView):
     """
     User Login Resource
     """
+
     def post(self):
         # get the post data
         post_data = request.get_json()
         try:
             # fetch the user data
             user = User.query.filter_by(
-                token=post_data.get('token')
+                unique_id=post_data.get('unique_id')
             ).first()
             if user:
                 auth_token = user.encode_auth_token(user.id)
@@ -91,6 +109,7 @@ class UserAPI(MethodView):
     """
     User Resource
     """
+
     def get(self):
         # get the auth token
         auth_header = request.headers.get('Authorization')
@@ -113,7 +132,7 @@ class UserAPI(MethodView):
                     'status': 'success',
                     'data': {
                         'user_id': user.id,
-                        'token': user.token,
+                        'unique_id': user.unique_id,
                         'admin': user.admin,
                         'registered_on': user.registered_on
                     }
@@ -136,6 +155,7 @@ class LogoutAPI(MethodView):
     """
     Logout Resource
     """
+
     @staticmethod
     def post():
         # get auth token
@@ -180,11 +200,11 @@ class LogoutAPI(MethodView):
 
 
 # define the API resources
+generation_view = GenerateAPI.as_view('generate_api')
 registration_view = RegisterAPI.as_view('register_api')
 login_view = LoginAPI.as_view('login_api')
 user_view = UserAPI.as_view('user_api')
 logout_view = LogoutAPI.as_view('logout_api')
-
 
 # add Rules for API Endpoints
 auth_blueprint.add_url_rule(
@@ -206,4 +226,9 @@ auth_blueprint.add_url_rule(
     '/auth/logout',
     view_func=logout_view,
     methods=['POST']
+)
+auth_blueprint.add_url_rule(
+    '/auth/generate',
+    view_func=generation_view,
+    methods=['GET']
 )
