@@ -30,6 +30,6 @@ class TestingConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     """Production configuration."""
-    SECRET_KEY = 'my_precious'
+    SECRET_KEY = os.getenv('SECRET_KEY')
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = 'postgresql:///example'
