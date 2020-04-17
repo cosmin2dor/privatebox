@@ -2,15 +2,15 @@ const Store = require('electron-store');
 const log = require('electron-log');
 const request = require('request');
 
-const API_ENDPOINT = "http://localhost:8080"
+const API_ENDPOINT = "http://localhost:8080/auth"
 
 class Authentication {
     
     static instance;
     
     constructor () {
-        if (instance) {
-            return instance
+        if (this.instance) {
+            return this.instance
         }
 
         this.store = new Store()
@@ -18,112 +18,44 @@ class Authentication {
         // Initiate from storage
         this.loggedIn = this.store.get("loggedIn", false)
         this.accessToken = this.store.get("accessToken", null)
-        this.refreshToken = this.store.get("refreshToken", null)
         this.expireDate = this.store.get("expireDate", null)
+        this.uniqueCode = this.store.get("uniqueCode", null)
 
         this.instance = this
     }
 
+    store_value(key, value) {
+        if (value == null) {
+            this.store.delete(key)
+        } else {
+            this.store.set(key, value)
+        }
+    }
+
     set loggedIn(value) {
         // Store and set
-        this.store.set("loggedIn", value)
+        this.store_value("loggedIn", value)
         this.loggedIn = value
     }
 
     set accessToken(value) {
         // TODO Validate
         // Store and set
-        this.store.set("accessToken", value)
+        this.store_value("accessToken", value)
         this.accessToken = value
-    }
-
-    set refreshToken(value) {
-        // TODO Validate
-        // Store and set
-        this.store.set("refreshToken", value)
-        this.refreshToken = value
     }
 
     set expireDate(value) {
         // TODO Validate
         // Store and set
-        this.store.set("expireDate", value)
+        this.store_value("expireDate", value)
         this.expireDate = value
     }
 
-    /*
-        Requires an loggedIn state and non-null accessToken and refreshToken
-        Checks if the token expired and tries to renew it if that's the case
-        Must be called before any attempt to get the accessToken
-    */
-    refresh() {
-        // We can refresh only if we've logged in in the past
-        if (!this.loggedIn) {
-            log.debug("Cannot refresh, User is not logged in")
-            throw Error("User is not logged in")
-        }
-
-        // Checking Authentication State Integrity
-        if (this.accessToken == null || this.refresh == null) {
-            // TODO General Error Message, logout the user and force him to log again
-            log.error("Invalid Authentication State. Refreshing with null components.")
-            log.debug(`Refreshing with accessToken=${this.accessToken} refreshToken=${this.refresh}`)
-            throw Error("Refreshing with null components")
-        }
-
-        // Checking if the token expired
-        var now = Date.now()
-        // Add a buffer of 10 seconds to account for the request delay
-        var expireDate = this.expireDate
-        expireDate.setSeconds(expireDate.getSeconds() + 10)
-
-        if (now < expireDate) {
-            log.debug(`Did not refresh token, now=${now} expireDate=${this.expireDate}`)
-            return
-        }
-
-        // Refresh the token
-        const options = {
-            url: API_ENDPOINT + '/refresh_token',
-            method: 'POST',
-            form: {
-                // TODO Change this
-                'refresh_token': this.refreshToken
-            },
-            headers: {
-                'Accept': 'application/json',
-                'Accept-Charset': 'utf-8',
-                'User-Agent': 'node agent'
-            }
-        };
-        
-        request(options, function(err, res, body) {
-            if (err) {
-                log.error(err)
-                throw err
-            }
-
-            if (res.statusCode != 200) {
-                log.error(`Non successful response: ${res.statusCode}`)
-                throw Error("Status code not 200")
-            }
-
-            // TODO Implement JSON Schema for validation
-            try {
-                let data = JSON.parse(body);
-                log.debug(`Refresh got: ${data}`)
-
-                // IMMEDIATE TODO Change name to match json schema and check if uses setters
-                this.accessToken = data.accessToken
-                this.refreshToken = data.refreshToken
-                this.expireDate = data.expireDate
-
-                log.debug("Token successfuly refreshed.")
-
-            } catch (e) {
-                log.error("Refresh got invalid data " + e.stack)
-            }    
-        });
+    set uniqueCode(value) {
+        // Store and set
+        this.store_value("uniqueCode", value)
+        this.uniqueCode = value
     }
 
     /*
@@ -143,14 +75,82 @@ class Authentication {
             url: API_ENDPOINT + '/login',
             method: 'POST',
             form: {
-                'unique_code': uniqueCode
+                'unique_id': uniqueCode
             },
             headers: {
                 'Accept': 'application/json',
                 'Accept-Charset': 'utf-8',
                 'User-Agent': 'node agent'
             }
-        };
+        }
+        
+        request(options, function(err, res, body) {
+            if (err) {
+                log.error(err)
+                throw err
+            }
+
+            if (res.statusCode != 200) {
+                log.error(`Non successful response: ${res.statusCode}`)
+                throw Error("Status code not 200")
+            }
+
+            // TODO Implement JSON Schema for validation
+            try {
+                let data = JSON.parse(body)
+                log.debug(`Login got: ${data}`)
+
+                // IMMEDIATE TODO Change name to match json schema and check if uses setters
+                this.accessToken = data.auth_token
+                this.expireDate = data.expireDate
+
+                this.uniqueCode = uniqueCode
+                this.loggedIn = true
+
+                log.debug("Login was successfully.")
+            } catch (e) {
+                log.error("Login got invalid data " + e.stack)
+            }   
+        })
+    }
+
+    refresh() {
+        // User should be logged in
+        if (!this.loggedIn) {
+            // TODO Maybe we should logout automatically? Or just pop Error Message
+            log.debug("Cannot refresh if not logged in first")
+            throw Error("Refresh before login")
+        }
+
+        if (this.uniqueCode == null) {
+            log.debug("Refresh with uniqueCode null")
+            throw Error("Refresh without uniqueCode")
+        }
+
+        // Checking if the token expired
+        var now = Date.now()
+        // Add a buffer of 10 seconds to account for the request delay
+        var expireDate = this.expireDate
+        expireDate.setSeconds(expireDate.getSeconds() + 10)
+
+        if (now < expireDate) {
+            log.debug(`Did not refresh token, now=${now} expireDate=${this.expireDate}`)
+            return
+        }
+
+        // Request login
+        const options = {
+            url: API_ENDPOINT + '/login',
+            method: 'POST',
+            form: {
+                'unique_id': this.uniqueCode
+            },
+            headers: {
+                'Accept': 'application/json',
+                'Accept-Charset': 'utf-8',
+                'User-Agent': 'node agent'
+            }
+        }
         
         request(options, function(err, res, body) {
             if (err) {
@@ -169,20 +169,21 @@ class Authentication {
                 log.debug(`Refresh got: ${data}`)
 
                 // IMMEDIATE TODO Change name to match json schema and check if uses setters
-                this.accessToken = data.accessToken
-                this.refreshToken = data.refreshToken
+                this.accessToken = data.auth_token
                 this.expireDate = data.expireDate
 
-                log.debug("Login was successfully.")
-            }
-        });
+                log.debug("Refresh was successfully.")
+            } catch (e) {
+                log.error("Refresh got invalid data " + e.stack)
+            }   
+        })
     }
 
     logout() {
         this.accessToken = null
-        this.refreshToken = null
         this.expireDate = null
         this.loggedIn = false
+        this.uniqueCode = null
     }
 
     get accessToken() {
@@ -191,4 +192,4 @@ class Authentication {
     }
 }
 
-export default Authentication
+module.exports.Authentication
