@@ -1,3 +1,4 @@
+import os
 import wg
 import json
 import utils
@@ -19,8 +20,7 @@ WG_NETWORK_DEFAULT = "10.10.0.0/24"
 
 NODE_INTERFACE     = "simpleVPN-node"
 
-INTRANET_NETWORK   = "172.25.0.0"
-# INTRANET_NETWORK   = "127.0.0.1"
+INTRANET_NETWORK   = os.getenv("INTRA_ADDR")
 
 class Service:
     def __init__(self):
@@ -208,6 +208,10 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG, \
         filename='comm_service.log', filemode='w', \
         format='%(name)s - %(levelname)s - %(message)s')
+
+    if INTRANET_NETWORK is None:
+        logging.error("INTRA_ADDR not set.")
+        return
 
     service = Service()
     service.start()
