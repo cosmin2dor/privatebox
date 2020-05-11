@@ -1,5 +1,6 @@
 import os
 import wg
+import sys
 import json
 import utils
 import logging
@@ -211,7 +212,7 @@ if __name__ == '__main__':
 
     if INTRANET_NETWORK is None:
         logging.error("INTRA_ADDR not set.")
-        return
+        sys.exit(0)
 
     service = Service()
     service.start()
