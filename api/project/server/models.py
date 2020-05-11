@@ -90,9 +90,10 @@ class Node(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     comm_port = db.Column(db.Integer, unique=False, nullable=False)
+    wg_port = db.Column(db.Integer, unique=False, nullable=False)
     country_code = db.Column(db.String(3), unique=False, nullable=False)
-    pub_key = db.Column(db.String(255), unique=True, nullable=False)
-    ip = db.Column(db.String(255), unique=True, nullable=False)
+    pub_key = db.Column(db.String(44), unique=True, nullable=False)
+    ip = db.Column(db.String(16), unique=True, nullable=False)
     last_seen = db.Column(db.DateTime, nullable=False)
 
     def __init__(self, comm_port, country_code, pub_key, ip):
