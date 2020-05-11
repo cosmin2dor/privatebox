@@ -231,7 +231,7 @@ class LocationsAPI(MethodView):
                 return make_response(jsonify(response_object)), 401
 
             locations = Node.query.options(load_only(Node.country_code)).all()
-            print("asdasdasdsaasdsa", locations)
+            locations = list(set([x.country_code for x in locations]))
             response_object = {
                 'status': 'success',
                 'data': {
@@ -287,7 +287,7 @@ class ConnectionAPI(MethodView):
                 }
                 return make_response(jsonify(response_object)), 402
 
-            node = Node.query.filter_by(pub_key=pub_key, country_code=country_code).first()
+            node = Node.query.filter_by(country_code=country_code).first()
             if node is None:
                 response_object = {
                     'status': 'fail',
@@ -295,7 +295,7 @@ class ConnectionAPI(MethodView):
                 }
                 return make_response(jsonify(response_object)), 402
 
-            url = 'http://' + node.ip + ':' + node.comm_port + '/request_accept'
+            url = 'http://' + node.ip + ':' + str(node.comm_port) + '/request_accept'
 
             response = requests.post(url, json={'pub_key': pub_key})
             if response.status_code != 200:
