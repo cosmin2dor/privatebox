@@ -19,8 +19,8 @@ WG_NETWORK_DEFAULT = "10.10.0.0/24"
 
 NODE_INTERFACE     = "simpleVPN-node"
 
-# INTRANET_NETWORK   = "172.25.0.0"
-INTRANET_NETWORK   = "127.0.0.1"
+INTRANET_NETWORK   = "172.25.0.0"
+# INTRANET_NETWORK   = "127.0.0.1"
 
 class Service:
     def __init__(self):
