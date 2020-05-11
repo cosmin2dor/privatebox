@@ -82,3 +82,22 @@ class BlacklistToken(db.Model):
             return True
         else:
             return False
+
+
+class Node(db.Model):
+    """ Node Model for storing node related details """
+    __tablename__ = "nodes"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    comm_port = db.Column(db.Integer, unique=False, nullable=False)
+    country_code = db.Column(db.String(3), unique=False, nullable=False)
+    pub_key = db.Column(db.String(255), unique=True, nullable=False)
+    ip = db.Column(db.String(255), unique=True, nullable=False)
+    last_seen = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, comm_port, country_code, pub_key, ip):
+        self.comm_port = comm_port
+        self.country_code = country_code
+        self.pub_key = pub_key
+        self.ip = ip
+        self.last_seen = datetime.datetime.now()
