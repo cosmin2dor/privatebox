@@ -230,7 +230,8 @@ class LocationsAPI(MethodView):
                 }
                 return make_response(jsonify(response_object)), 401
 
-            locations = list(set(Node.query.options(load_only('country_code')).all))
+            locations = Node.query.options(load_only(Node.country_code)).all
+            print("asdasdasda", locations)
             response_object = {
                 'status': 'success',
                 'data': {
