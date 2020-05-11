@@ -96,8 +96,9 @@ class Node(db.Model):
     ip = db.Column(db.String(16), unique=True, nullable=False)
     last_seen = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, comm_port, country_code, pub_key, ip):
+    def __init__(self, comm_port, wg_port, country_code, pub_key, ip):
         self.comm_port = comm_port
+        self.wg_port = wg_port
         self.country_code = country_code
         self.pub_key = pub_key
         self.ip = ip
