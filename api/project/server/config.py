@@ -1,7 +1,7 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 postgres_local_base = 'postgresql:///'
-database_name = 'flask_jwt_auth'
+database_name = 'simplevpn'
 
 
 class BaseConfig:

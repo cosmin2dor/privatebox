@@ -29,8 +29,8 @@ Create the databases in `psql`:
 
 ```sh
 $ psql
-# create database flask_jwt_auth
-# create database flask_jwt_auth_testing
+# create database simplevpn
+# create database simplevpn_testing
 # \q
 ```
 
