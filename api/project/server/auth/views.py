@@ -5,6 +5,7 @@ from flask.views import MethodView
 
 import secrets
 import requests
+import logging
 import json
 from sqlalchemy.orm import load_only
 
@@ -12,6 +13,37 @@ from project.server import db
 from project.server.models import User, BlacklistToken, Node
 
 auth_blueprint = Blueprint('auth', __name__)
+
+class Node:
+    def __init__(self, endpoint, port):
+        self.endpoint = endpoint
+        self.comm_port = port
+
+connected_devices = set()
+device_node_map = {}
+
+def get_node_from(pub_key):
+    try:
+        node = device_node_map[pub_key]
+    except KeyError:
+        return None
+
+    return node
+
+def device_connected(pub_key, node):
+    device_node_map[pub_key] = node
+    connected_devices.add(pub_key)
+
+def device_disconnected(pub_key):
+    try:
+        del device_node_map[pub_key]
+        connected_devices.remove(pub_key)
+    except:
+        logging.error("Could not remove device from map, set: {}".format(pub_key))
+        return
+
+def is_device_connected(pub_key):
+    return pub_key in connected_devices
 
 
 class GenerateAPI(MethodView):
@@ -287,6 +319,13 @@ class ConnectionAPI(MethodView):
                 }
                 return make_response(jsonify(response_object)), 402
 
+            if is_device_connected(pub_key):
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Device already connected. Please disconnect first.'
+                }
+                return make_response(jsonify(response_object)), 402
+
             node = Node.query.filter_by(country_code=country_code).first()
             if node is None:
                 response_object = {
@@ -304,6 +343,8 @@ class ConnectionAPI(MethodView):
                     'message': response.content
                 }
                 return make_response(jsonify(response_object)), response.status_code
+
+            device_connected(pub_key, Node(node.ip, node.comm_port))
 
             data = json.loads(response.content)
             response_object = {
@@ -323,6 +364,84 @@ class ConnectionAPI(MethodView):
             }
             return make_response(jsonify(response_object)), 401
 
+class RevokeAPI(MethodView):
+    """
+    Revoke Resource
+    """
+
+    @staticmethod
+    def post():
+        # get the auth token
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Bearer token malformed.'
+                }
+                return make_response(jsonify(response_object)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = User.decode_auth_token(auth_token)
+            if isinstance(resp, str):
+                response_object = {
+                    'status': 'fail',
+                    'message': resp
+                }
+                return make_response(jsonify(response_object)), 401
+
+            if request.is_json:
+                req = request.get_json()
+                pub_key = req.get('pub_key')
+            else:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Request was not JSON.'
+                }
+                return make_response(jsonify(response_object)), 402
+
+            if not is_device_connected(pub_key):
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Device not connected. Could not disconnect.'
+                }
+                return make_response(jsonify(response_object)), 402
+
+            node = get_node_from(pub_key)
+            if node is None:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Device connected, but node is not found.'
+                }
+                return make_response(jsonify(response_object)), 500
+
+            url = 'http://' + node.endpoint + ':' + str(node.comm_port) + '/revoke_connection'
+
+            response = requests.post(url, json={'pub_key': pub_key})
+            if response.status_code != 200:
+                response_object = {
+                    'status': 'fail',
+                    'message': response.content
+                }
+                return make_response(jsonify(response_object)), response.status_code
+
+            device_disconnected(pub_key)
+
+            response_object = {
+                'status': 'success',
+                'message': 'Client revoked successfully'
+            }
+            return make_response(jsonify(response_object)), 200
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(response_object)), 401
+
 
 # define the API resources
 generation_view = GenerateAPI.as_view('generate_api')
@@ -332,6 +451,8 @@ user_view = UserAPI.as_view('user_api')
 logout_view = LogoutAPI.as_view('logout_api')
 locations_view = LocationsAPI.as_view('locations_api')
 connection_view = ConnectionAPI.as_view('connection_api')
+revoke_view = RevokeAPI.as_view('revoke_api')
+
 
 # add Rules for API Endpoints
 auth_blueprint.add_url_rule(
@@ -367,5 +488,10 @@ auth_blueprint.add_url_rule(
 auth_blueprint.add_url_rule(
     '/request_connection',
     view_func=connection_view,
+    methods=['POST']
+)
+auth_blueprint.add_url_rule(
+    '/revoke_connection',
+    view_func=revoke_view,
     methods=['POST']
 )
