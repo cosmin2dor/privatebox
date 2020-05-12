@@ -32,14 +32,17 @@ class WG:
         self.available_hosts = set(self.hosts)
         self.used_hosts = set()
 
-    def get_available_host(self):
+    def get_available_host(self, with_mask=False):
         try:
             # Get a random available host
             host = self.available_hosts.pop()
             # Mark it as used
             self.used_hosts.add(host)
 
-            return host
+            if with_mask:
+                return (host, self.network.prefixlen)
+            else:
+                return host
         except KeyError:
             # No available host
             return None

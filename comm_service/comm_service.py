@@ -17,11 +17,11 @@ DEFAULT_PORT_1     = 45555
 DEFAULT_PORT_2     = 55555
 
 DNS_DEFAULT        = "8.8.8.8"
-WG_NETWORK_DEFAULT = "10.10.0.0/24"
+WG_NETWORK_DEFAULT = "10.10.0.0/16"
 
 NODE_INTERFACE     = "simpleVPN-node"
 
-INTRANET_NETWORK   = os.getenv("INTRA_ADDR")
+INTRANET_NETWORK   = os.getenv("INTRA_ADDR", default="127.0.0.1")
 
 class Service:
     def __init__(self):
@@ -171,7 +171,7 @@ def accept_connection():
             response = "Server is not property initialized. Please restart."
         )
 
-    host = service.wg_o.get_available_host()
+    (host, mask) = service.wg_o.get_available_host(with_mask=True)
 
     # Node cannot accept any user
     if host is None:
@@ -201,7 +201,7 @@ def accept_connection():
             'wg_port': service.wg_port,
             'external_endpoint': service.endpoint,
             'node_pub_key': service.wg_o.get_pubKey(),
-            'assigned_ip': str(host)
+            'assigned_ip': "{host}/{mask}".format(host=str(host), mask=str(mask))
         })
     )
 
