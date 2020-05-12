@@ -5,6 +5,7 @@ import json
 import utils
 import logging
 import requests
+import threading
 from time import sleep
 from random import randint
 from flask import Flask, Response, jsonify, request
@@ -23,6 +24,29 @@ NODE_INTERFACE     = "simpleVPN-node"
 
 INTRANET_NETWORK   = os.getenv("INTRA_ADDR", default="127.0.0.1")
 
+# 2 hours
+CONNECTION_TIMEOUT = 7200
+
+def timeout_handler(pubKey):
+    logging.debug("Client timout. Disconnecting {}".format(pubKey))
+
+    if not service.is_device_connected(pubKey):
+        logging.error("Hanging timer")
+        try:
+            del service.session_timers[pubKey]
+        except KeyError:
+            logging.error("Cannot remove timer")
+            return
+
+    try:
+        service.wg_o.remove_peer(pubKey, NODE_INTERFACE)
+        service.device_revoked(pubKey)
+        # TODO Inform API that this client was disconnected
+    except:
+        pass
+
+    pass
+
 class Service:
     def __init__(self):
         self.comm_port = DEFAULT_PORT_1
@@ -31,6 +55,7 @@ class Service:
         self.dns = DNS_DEFAULT
         self.connected_devices = set()
         self.devices_hosts_map = {}
+        self.session_timers = {}
 
     def set_endpoint(self):
         self.endpoint = utils.get_endpoint()
@@ -56,9 +81,19 @@ class Service:
     def is_device_connected(self, pubKey):
         return pubKey in self.connected_devices
 
+    def stop_all_timers(self):
+        for _, timer in self.session_timers.items():
+            timer.cancel()
+
+    def set_timer(self, pubKey):
+        self.session_timers[pubKey] = threading.Timer(\
+            CONNECTION_TIMEOUT, timeout_handler, kwargs={'pubKey': pubKey})
+        self.session_timers[pubKey].start()
+
     def device_accepted(self, pubKey, host):
         self.connected_devices.add(pubKey)
         self.devices_hosts_map[pubKey] = host
+        self.set_timer(pubKey)
 
     def device_revoked(self, pubKey):
         try:
@@ -70,6 +105,9 @@ class Service:
         self.wg_o.free_host(host)
         self.connected_devices.remove(pubKey)
         del self.devices_hosts_map[pubKey]
+        # Cancel and free the timer
+        service.session_timers[pubKey].cancel()
+        del service.session_timers[pubKey]
 
     def get_available_network(self):
         # TODO Check if there is any other interface conflicting with this network
@@ -103,6 +141,7 @@ class Service:
 
         # Stop when the process stops
         self.stop()
+        self.stop_all_timers()
 
 @app.route('/revoke_connection/', methods=['POST'])
 def revoke_connection():
@@ -204,6 +243,35 @@ def accept_connection():
             'assigned_ip': "{host}/{mask}".format(host=str(host), mask=str(mask))
         })
     )
+
+@app.route('/keep_alive/', methods=['POST'])
+def keep_alive():
+
+    try:
+        pubKey = request.get_json()['pub_key']
+    except KeyError:
+        logging.info("Provide pubKey argument.")
+        return Response(
+            status = 400,
+            response = "Provide pubKey argument."
+        )
+
+    if not service.is_device_connected(pubKey):
+        logging.error("Recieved keep alive for not connected device.")
+        return Response(
+            status = 400,
+            response = "Device not connected."
+        )
+
+    # Reset the timer
+    service.session_timers[pubKey].cancel()
+    service.set_timer(pubKey)
+
+    return Response(
+        status = 200,
+        response = "Keep alive OK."
+    )
+
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG, \
