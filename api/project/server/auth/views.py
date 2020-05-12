@@ -14,24 +14,19 @@ from project.server.models import User, BlacklistToken, Node
 
 auth_blueprint = Blueprint('auth', __name__)
 
-class Node:
-    def __init__(self, endpoint, port):
-        self.endpoint = endpoint
-        self.comm_port = port
-
 connected_devices = set()
 device_node_map = {}
 
 def get_node_from(pub_key):
     try:
-        node = device_node_map[pub_key]
+        (endpoint, comm_port) = device_node_map[pub_key]
     except KeyError:
-        return None
+        return (None, None)
 
-    return node
+    return (endpoint, comm_port)
 
-def device_connected(pub_key, node):
-    device_node_map[pub_key] = node
+def device_connected(pub_key, endpoint, comm_port):
+    device_node_map[pub_key] = (endpoint, comm_port)
     connected_devices.add(pub_key)
 
 def device_disconnected(pub_key):
@@ -344,7 +339,7 @@ class ConnectionAPI(MethodView):
                 }
                 return make_response(jsonify(response_object)), response.status_code
 
-            device_connected(pub_key, Node(node.ip, node.comm_port))
+            device_connected(pub_key, node.ip, node.comm_port)
 
             data = json.loads(response.content)
             response_object = {
@@ -410,15 +405,15 @@ class RevokeAPI(MethodView):
                 }
                 return make_response(jsonify(response_object)), 402
 
-            node = get_node_from(pub_key)
-            if node is None:
+            (node_endpoint, node_comm_port) = get_node_from(pub_key)
+            if node_endpoint is None or node_comm_port is None:
                 response_object = {
                     'status': 'fail',
                     'message': 'Device connected, but node is not found.'
                 }
                 return make_response(jsonify(response_object)), 500
 
-            url = 'http://' + node.endpoint + ':' + str(node.comm_port) + '/revoke_connection'
+            url = 'http://' + node_endpoint + ':' + str(node_comm_port) + '/revoke_connection'
 
             response = requests.post(url, json={'pub_key': pub_key})
             if response.status_code != 200:
