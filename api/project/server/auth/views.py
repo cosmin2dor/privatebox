@@ -99,6 +99,54 @@ class RegisterAPI(MethodView):
             return make_response(jsonify(response_object)), 202
 
 
+class WebHookAPI(MethodView):
+    """
+    Webhook Resource
+    """
+
+    @staticmethod
+    def post():
+        # get the post data
+        post_data = request.get_json()
+        customer_id = post_data.get("id")
+        if not customer_id:
+            customer_id = post_data.get("subscription").get("id")
+        unique_id = post_data.get("content").get("customer").get("cf_account_id")
+        #print(post_data)
+        print(unique_id)
+        # check if user already exists
+        user = User.query.filter_by(unique_id=unique_id).first()
+        if not user:
+            try:
+                user = User(
+                    unique_id=unique_id,
+                    customer_id=customer_id,
+                )
+
+                # insert the user
+                db.session.add(user)
+                db.session.commit()
+                response_object = {
+                    'status': 'success',
+                    'message': 'Successfully registered.',
+                }
+                return make_response(jsonify(response_object)), 201
+            except Exception as e:
+                print(e)
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Some error occurred. Please try again.'
+                }
+                return make_response(jsonify(response_object)), 401
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'User already exists. Please Log in.',
+            }
+            return make_response(jsonify(response_object)), 202
+
+
+
 class LoginAPI(MethodView):
     """
     User Login Resource
@@ -447,7 +495,7 @@ logout_view = LogoutAPI.as_view('logout_api')
 locations_view = LocationsAPI.as_view('locations_api')
 connection_view = ConnectionAPI.as_view('connection_api')
 revoke_view = RevokeAPI.as_view('revoke_api')
-
+webhook_view = WebHookAPI.as_view('webhook_api')
 
 # add Rules for API Endpoints
 auth_blueprint.add_url_rule(
@@ -490,3 +538,9 @@ auth_blueprint.add_url_rule(
     view_func=revoke_view,
     methods=['POST']
 )
+auth_blueprint.add_url_rule(
+    '/webhook',
+    view_func=webhook_view,
+    methods=['POST']
+)
+

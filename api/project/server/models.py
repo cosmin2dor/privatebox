@@ -9,14 +9,16 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    unique_id = db.Column(db.String(255), unique=True, nullable=False)
+    unique_id = db.Column(db.String(20), unique=True, nullable=False)
+    customer_id = db.Column(db.String(51), unique=True, nullable=True)
     registered_on = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
 
-    def __init__(self, unique_id, admin=False):
+    def __init__(self, unique_id, customer_id=None, admin=False):
         self.registered_on = datetime.datetime.now()
         self.unique_id = unique_id
         self.admin = admin
+        self.customer_id = customer_id
 
     def encode_auth_token(self, user_id):
         """
