@@ -14,15 +14,14 @@
                             <p class="masthead__content-subtitle">Lots of security. Less to worry.</p>
                             
                             <div class="masthead__content-action">
-                                <a href="pricing.php" class="btn btn-orange btn-rounded btn-icon-left btn-lg" ><i class="fa fa-play"></i> Generate Account</a>
-                                <!-- <a href="#" class="btn btn-primary btn-rounded btn-icon-left btn-lg"><i class="fa fa-download"></i> Download</a> -->
+                                <a href="pricing.php" class="btn btn-orange btn-rounded btn-icon-left btn-md" ><i class="fa fa-play"></i> Generate Account</a>
                             </div>
                         </div>
                     </div> 
                     <div class="col-lg-6 text-center">
                         <div class="masthead__style-watter--image">
                             <div class="masthead__style-watter--icon flyIn">
-                                <img src="assets/images/masthead-icon.png" class="img-fluid" alt="Icon" />
+                                <img src="assets/images/masthead-icon.png" class="img-fluid" alt="Icons" />
                             </div>
                             <img src="assets/images/businessman-meditating.png" class="img-fluid" alt="Business Man" />
                         </div>
