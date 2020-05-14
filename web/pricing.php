@@ -40,9 +40,8 @@
             <?php
             if (isset($_SESSION['customer_id'])) {
                 include 'manage_account.php';
-            }else{
-                include 'pricing_plans.php'; 
             }
+            include 'pricing_plans.php';
             ?>
         </div>
     </section>

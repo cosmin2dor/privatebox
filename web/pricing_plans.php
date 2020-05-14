@@ -18,9 +18,11 @@
                                 </p>
                                 <a href="#" class="pricing__content-package" data-toggle="modal" data-target="#besicPackage">What’s included ?</a>
                             </div>
+                            <?php if(!isset($_SESSION['customer_id'])) : ?>
                             <div class="pricing__action">
                                 <button type="button" class="btn btn-green btn-stroke btn-rounded pricing__button"><a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="cbdemo_free" style="color:#000000;" >Choose Plan</button>
                             </div>
+                            <?php endif; ?>
                         </div>
                         <!-- End pricing 1-->
 
@@ -41,9 +43,11 @@
                                 </p>
                                 <a href="#" class="pricing__content-package" data-toggle="modal" data-target="#premiumPackage">What’s included ?</a>
                             </div>
+                            <?php if(!isset($_SESSION['customer_id'])) : ?>
                             <div class="pricing__action">
                                 <button type="button" class="btn btn-primary btn-stroke btn-rounded pricing__button"><a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="premium" style="color:#000000;">Choose Plan</a></button>
                             </div>
+                            <?php endif; ?>
                         </div>
                         <!-- End pricing 2-->
 
@@ -64,11 +68,13 @@
                                 </p>
                                 <a href="#" class="pricing__content-package" data-toggle="modal" data-target="#businessPackage">What's included ?</a>
                             </div>
+                            <?php if(!isset($_SESSION['customer_id'])) : ?>
                             <div class="pricing__action">
                                 <button type="button" class="btn btn-red btn-stroke btn-rounded pricing__button">
                                 <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="ultra" style="color:#000000;">Choose Plan</a>
                                 </button>
                             </div>
+                            <?php endif; ?>
                         </div>
                         <!-- End pricing 3-->
                     </div>

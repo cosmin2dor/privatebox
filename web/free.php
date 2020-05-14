@@ -2,36 +2,19 @@
 <html lang="en">
     <?php include 'header.php'; ?>
 
-    <!-- Start Masthead -->
-    <section class="masthead js-masthead-height pb-0">
-        <div class="masthead__style-overlay"></div>
-        <div class="masthead__style-watter">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="masthead__content masthead__content-mtop">
-                            <h1 class="masthead__content-title">The VPN that just works.</h1>
-                            <p class="masthead__content-subtitle">Lots of security. Less to worry.</p>
-                            <div class="masthead__content-action">
-                                <a href="pricing.php?generate=1" class="btn btn-orange btn-rounded btn-icon-left btn-md" ><i class="fa fa-play"></i> Generate Account</a>
-                            </div>
-                        </div>
-                    </div> 
-                    <div class="col-lg-6 text-center">
-                        <div class="masthead__style-watter--image">
-                            <div class="masthead__style-watter--icon flyIn">
-                                <img src="assets/images/masthead-icon.png" class="img-fluid" alt="Icons" />
-                            </div>
-                            <img src="assets/images/businessman-meditating.png" class="img-fluid" alt="Business Man" />
-                        </div>
-                    </div>
+    <section class="section pb-60">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <h1></h1>
+                    <h2 class="section__heading section__heading-center">
+                        How can we make this free?
+                    </h2>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- End Masthead -->
+     </section>
 
-    <!-- Start Section -->
+     <!-- Start Section -->
     <section class="section pb-40">
         <div class="container">
             <div class="row">
@@ -138,67 +121,7 @@
         </div>
     </section>
     <!-- End Section -->
-
-    <div class="section__divider section__divider-right"></div>
-
-    <!-- Start Section -->
-    <section class="section pt-0 pb-60">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 mb-40">
-                    <img src="assets/images/lady-with-handphone.png" class="img-fluid" alt="Lady with handphone" />
-                </div>
-                <div class="col-lg-4 align-self-center mb-40">
-                    <h2>You should really not scroll this much. It's simpler than that.</h2>
-                    <p>
-                    If you have any more questions contact us via our 24/7 support.
-                    </p>
-                   <!--  <a href="#" class="btn btn-primary btn-rounded">Support Button </a> -->
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End Section -->
-
-    <!-- Start Section -->
-    <section class="section section__gray-watter--bottom">
-        <div class="container">
-            <div class="row mt-100">
-                <div class="col-lg-6 offset-lg-3">
-                    <h2 class="section__heading section__heading-center">The Team</h2>
-                </div>
-            </div> 
-            <div class="row">
-                <div class="col-lg-6 offset-lg-3 text-center mb-20">
-                    <div class="owl-carousel js-owl-testimoni">
-
-                        <div class="item">
-                            <div class="testimoni">
-                                <blockquote>When I am not keeping the bad guys out of our network I love to cook exotic dishes.</blockquote>
-                                <p class="testimoni__author"><a href="#">Vasile Andreiev</a></p>
-                                <a class="testimoni__avatar"><img src="./assets/brand/vasile_andreiev.jpeg" class="testimoni__avatar-image" alt="Vasile Andreiev" /></a>
-                            </div>
-                        </div>
-
-                        <div class="item">
-                            <div class="testimoni">
-                                <blockquote>Security Engineer turned Developer. Playing FIFA and hikes in the woods are a must.</blockquote>
-                                <p class="testimoni__author"><a href="#">Stefan Bratescu</a></p>
-                                <a class="testimoni__avatar"><img src="./assets/brand/stefan_bratescu.jpg" class="testimoni__avatar-image" alt="Stefan Bratescu" /></a>
-                            </div>
-                        </div>
-
-                        <div class="item">
-                            <div class="testimoni">
-                                <blockquote>Developing simple solutions is my passion. Part-time writing, electric cars enthusiast.</blockquote>
-                                <p class="testimoni__author"><a href="#">Cosmin Tudor</a></p>
-                                <a class="testimoni__avatar"><img src="./assets/brand/cosmin_tudor.jpg" class="testimoni__avatar-image" alt="Cosmin Tudor" /></a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+     
      <!-- End Section -->
     <?php include 'footer.php'; ?>
     <?php include 'scripts.php'; ?>

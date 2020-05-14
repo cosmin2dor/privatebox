@@ -37,7 +37,12 @@
             <ul class="menu">
                 <li><a href="index.php">Home</a></li>
                 <li><a href="about-us.php">All about trust</a></li>
-                <li><a href="pricing.php">Pricing</a></li>
+                <li><a href="free.php">How it works</a></li>
+                <?php if(isset($_SESSION['loggedin'])) : ?>
+                    <li><a href="pricing.php">Pricing</a></li>
+                <?php else: ?>
+                    <li><a href="pricing.php?generate=1">Pricing</a></li>
+                <?php endif; ?>
             <ul class="attributes">
                 <?php if(isset($_SESSION['loggedin'])) : ?>
                     <li class="header__button"><a href="pricing.php" class="btn btn-primary btn-rounded btn-xs btn-header">Account</a></li>
