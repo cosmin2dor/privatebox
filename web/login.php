@@ -32,8 +32,6 @@
 		return $result;
 	}
 
-   session_start();
-
    if(isset($_SESSION['customer_id'])) {
 		header('Location: '."/pricing.php");
 		die();
@@ -85,11 +83,13 @@
 	                        <h2>Type in your account number: </h2>
 	                    </div>
 	                </div>
+                	<?php if(isset($error)) : ?>
 	                <div calss="row">
 	                    <div class="col-md-12">
 	                        <h2 style="color:red"><?php echo $error; ?></h2>
 	                    </div>
 	                </div>
+                	<?php endif; ?>
 	                <div calss="row">
 	                    <div class="col-md-8 offset-lg-2">
 	                        <fieldset class="section__cta-subscribe">
