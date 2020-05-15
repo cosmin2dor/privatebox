@@ -108,10 +108,26 @@ class WebHookAPI(MethodView):
     def post():
         # get the post data
         post_data = request.get_json()
-        customer_id = post_data.get("id")
-        if not customer_id:
-            customer_id = post_data.get("subscription").get("id")
+        event_type = post_data.get("event_type")
+        print(event_type)
+        if event_type != "subscription_created":
+                response_object = {
+                    'status': 'unimplemented',
+                    'event_type': event_type,
+                }
+                return make_response(jsonify(response_object)), 203
+
         unique_id = post_data.get("content").get("customer").get("cf_account_id")
+        customer_id = post_data.get("content").get("customer").get("id")
+        
+        if not unique_id or not customer_id:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'missing parameters',
+                    'parameter' : 'content:customer:cd_account_id' if not unique_id else 'content:customer:id',
+                }
+                return make_response(jsonify(response_object)), 401
+        
         #print(post_data)
         print(unique_id)
         # check if user already exists
@@ -142,6 +158,40 @@ class WebHookAPI(MethodView):
             response_object = {
                 'status': 'fail',
                 'message': 'User already exists. Please Log in.',
+            }
+            return make_response(jsonify(response_object)), 202
+
+class CustomerIdAPI(MethodView):
+    """
+    Webhook Resource
+    """
+
+    @staticmethod
+    def post():
+        # get the post data
+        post_data = request.get_json()
+        unique_id = post_data.get("unique_id")
+        user = User.query.filter_by(unique_id=unique_id).first()
+        if user:
+            try:
+                if not user.customer_id:
+                    raise Exception("Customer id not present")
+                response_object = {
+                    'status': 'success',
+                    'customer_id': user.customer_id,
+                }
+                return make_response(jsonify(response_object)), 201
+            except Exception as e:
+                print(e)
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Some error occurred. Please try again.'
+                }
+                return make_response(jsonify(response_object)), 401
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'User does not exist',
             }
             return make_response(jsonify(response_object)), 202
 
@@ -496,6 +546,7 @@ locations_view = LocationsAPI.as_view('locations_api')
 connection_view = ConnectionAPI.as_view('connection_api')
 revoke_view = RevokeAPI.as_view('revoke_api')
 webhook_view = WebHookAPI.as_view('webhook_api')
+customerid_view = CustomerIdAPI.as_view('customerid_api')
 
 # add Rules for API Endpoints
 auth_blueprint.add_url_rule(
@@ -541,6 +592,11 @@ auth_blueprint.add_url_rule(
 auth_blueprint.add_url_rule(
     '/webhook',
     view_func=webhook_view,
+    methods=['POST']
+)
+auth_blueprint.add_url_rule(
+    '/customer',
+    view_func=customerid_view,
     methods=['POST']
 )
 
