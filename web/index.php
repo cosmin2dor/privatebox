@@ -9,20 +9,20 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="masthead__content masthead__content-mtop">
+                        <div class="masthead__content masthead__content-mtop" style="padding-top: 150px;">
                             <h1 class="masthead__content-title">The VPN that just works.</h1>
                             <p class="masthead__content-subtitle">Lots of security. Less to worry.</p>
                             <div class="masthead__content-action">
                                 <a href="pricing.php?generate=1" class="btn btn-orange btn-rounded btn-icon-left btn-md" ><i class="fa fa-play"></i> Generate Account</a>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     <div class="col-lg-6 text-center">
                         <div class="masthead__style-watter--image">
                             <div class="masthead__style-watter--icon flyIn">
                                 <img src="assets/images/masthead-icon.png" class="img-fluid" alt="Icons" />
                             </div>
-                            <img src="assets/images/businessman-meditating.png" class="img-fluid" alt="Business Man" />
+                            <img src="assets/images/macbook.png" class="img-fluid" alt="Business Man" />
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
         </div>
     </section>
     <!-- End Section -->
-    
+
     <div class="section__divider section__divider-left"></div>
 
     <!-- Start Section -->
@@ -167,7 +167,7 @@
                 <div class="col-lg-6 offset-lg-3">
                     <h2 class="section__heading section__heading-center">The Team</h2>
                 </div>
-            </div> 
+            </div>
             <div class="row">
                 <div class="col-lg-6 offset-lg-3 text-center mb-20">
                     <div class="owl-carousel js-owl-testimoni">
@@ -203,7 +203,7 @@
     <?php include 'footer.php'; ?>
     <?php include 'scripts.php'; ?>
 
-    <script> 
+    <script>
         drift.on('ready',function(api){
               api.widget.show()
             api.sidebar.open()
@@ -225,4 +225,3 @@
 
     </body>
 </html>
-
