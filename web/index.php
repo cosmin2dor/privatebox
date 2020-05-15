@@ -13,7 +13,7 @@
                             <h1 class="masthead__content-title">The VPN that just works.</h1>
                             <p class="masthead__content-subtitle">Lots of security. Less to worry.</p>
                             <div class="masthead__content-action">
-                                <a href="pricing.php?generate=1" class="btn btn-orange btn-rounded btn-icon-left btn-md" ><i class="fa fa-play"></i> Generate Account</a>
+                                <a href="pricing.php?generate=1" class="btn btn-primary btn-rounded btn-icon-left btn-md" ><i class="fa fa-play"></i> Generate Account</a>
                             </div>
                         </div>
                     </div>

@@ -36,7 +36,7 @@
             <!-- End Header menu for mobile -->	
             <ul class="menu">
                 <li><a href="index.php">Home</a></li>
-                <li><a href="about-us.php">All about trust</a></li>
+                <li><a href="about_us.php">All about trust</a></li>
                 <li><a href="free.php">How it works</a></li>
                 <?php if(isset($_SESSION['loggedin'])) : ?>
                     <li><a href="pricing.php">Pricing</a></li>

@@ -14,7 +14,7 @@
                 <div class="col-lg-4 col-sm-4">
                     <div class="column__boxed">
                         <span class="icon icon-users column__boxed-icon"></span>
-                        <h5 class="column__boxed-title">Our comumnity</h5>
+                        <h5 class="column__boxed-title">Our community</h5>
                         <p>
                         The community is the backbone of SimpleVPN>
                         </p>
