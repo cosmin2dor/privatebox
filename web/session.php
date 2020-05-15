@@ -1,8 +1,10 @@
 <?php
 // Start the session
 session_start();
-var_dump($_SESSION);
-// var_dump($_SESSION);
+$debug_key="cosmincacanarnr1";
+if(isset($_GET["debug"]) && $_GET["debug"] == $debug_key ){
+	var_dump($_SESSION);
+}
 if(isset($_GET["logout"]) && $_GET["logout"] == 1){
 	unset($_SESSION["loggedin"]);
 	unset($_SESSION["id"]);
