@@ -1,3 +1,17 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
 .App {
   text-align: center;
   background-color: rgb(38, 49, 87);
@@ -36,4 +50,160 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.tab {
+  margin: 5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  background: rgb(41,54,94);
+  background: linear-gradient(0deg, rgba(41,54,94,1) 0%, rgba(49,63,109,1) 100%);
+  color: rgb(227, 228, 234);
+  padding: 5px;
+  border-radius: 10px;
+  width: 300px;
+  height: 50px;
+}
+
+.auto-tab {
+  margin: 5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  background: rgb(0,179,159);
+  background: linear-gradient(0deg, rgba(0,179,159,1) 0%, rgba(23,226,201,1) 100%);
+  color: rgb(29, 29, 29);
+  padding: 5px;
+  border-radius: 10px;
+  width: 300px;
+  height: 50px;
+}
+
+.tab .flag {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  border-right: 1px solid rgb(161, 167, 190);
+}
+
+.auto-tab .flag {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  border-right: 1px solid rgb(161, 167, 190);
+}
+
+.tab .flag img {
+  align-self: center;
+  flex-wrap: nowrap;
+  height: 70%;
+}
+
+.tab .name {
+  display: flex;
+  padding-left: 20px;
+  flex: 3;
+  font-size: 20px;
+}
+
+.auto-tab .name {
+  display: flex;
+  padding-left: 20px;
+  flex: 3;
+  font-size: 20px;
+}
+
+.tab .check {
+  color: rgba(23,226,201,1);
+  padding-right: 20px;
+}
+
+.container-main {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.connection-button {
+  display: flex;
+  margin-top: 50px;
+  width: 100px;
+  height: 100px;
+  border: none;
+  border-radius: 50%;
+  justify-content: center;
+}
+
+.active {
+  background: rgb(0,179,159);
+  background: linear-gradient(0deg, rgba(0,179,159,1) 0%, rgba(23,226,201,1) 100%);
+}
+
+.inactive {
+  background: rgb(132, 177, 172);
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.container-login {
+  color: white;
+  background-color: rgb(31, 40, 71);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-content: stretch;
+  height: 600px;
+}
+
+input {
+  color: white;
+  background: rgb(41,54,94);
+  background: linear-gradient(0deg, rgba(41,54,94,1) 0%, rgba(49,63,109,1) 100%);
+  border-radius: 100px;
+  padding: 1em;
+  width: auto;
+  align-self: stretch;
+  margin-left: 2em;
+  margin-right: 2em;
+  text-align: center;
+  border: none;
+}
+
+.invalid {
+  border: 1px solid red;
+}
+
+.valid {
+  border: none;
+}
+
+.button-1 {
+  color: rgb(29, 29, 29);
+  background: rgb(0,179,159);
+  background: linear-gradient(0deg, rgba(0,179,159,1) 0%, rgba(23,226,201,1) 100%);
+  border-radius: 100px;
+  border: none;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  margin-left: 2em;
+  margin-right: 2em;
+  align-self: stretch;
+}
+
+.logo {
+  width: 100px;
+  align-self: center;
 }
