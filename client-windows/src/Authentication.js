@@ -2,9 +2,9 @@ const log = require('electron-log');
 const http = require('http');
 const Store = require('electron-store');
 
-const API_ENDPOINT = "http://209.250.254.111:5000/auth"
-const API_HOSTNAME = "209.250.254.111"
-const API_PORT = 5000
+const API_ENDPOINT = "http://simplevpn.tech:8080/auth"
+const API_HOSTNAME = "simplevpn.tech"
+const API_PORT = 8080
 
 class Authentication {
     
@@ -174,7 +174,7 @@ class Authentication {
                     return
                 })
             })
-    
+
             req.write(postData)
             req.end()
         })
@@ -198,7 +198,6 @@ class Authentication {
     
             // Checking if the token expired
             var now = Date.now()
-            console.log(`My now is ${now}`)
             // Add a buffer of 10 seconds to account for the request delay
             var expireDate = new Date(this.expireDate)
             expireDate.setSeconds(expireDate.getSeconds() - 10)
@@ -271,7 +270,7 @@ class Authentication {
                     return
                 })
             })
-    
+
             req.write(postData)
             req.end()
         })

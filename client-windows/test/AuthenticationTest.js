@@ -9,13 +9,13 @@ const sinon = require('sinon')
 const http = require('http')
 const { Authentication } = require('../src/Authentication')
 
-const TEST_CODE = "6165764362176623"
+const TEST_CODE = "1136615712133170"
 const TEST_USER_ID = 1
 
 const TOKEN_DURATION = 24
 
-const API_HOSTNAME = "209.250.254.111"
-const API_PORT = 5000
+const API_HOSTNAME = "simplevpn.tech"
+const API_PORT = 8080
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

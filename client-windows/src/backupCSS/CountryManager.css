@@ -1,0 +1,102 @@
+.tab {
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    background: rgb(41,54,94);
+    background: linear-gradient(0deg, rgba(41,54,94,1) 0%, rgba(49,63,109,1) 100%);
+    color: rgb(227, 228, 234);
+    padding: 5px;
+    border-radius: 10px;
+    width: 300px;
+    height: 50px;
+  }
+  
+  .auto-tab {
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    background: rgb(0,179,159);
+    background: linear-gradient(0deg, rgba(0,179,159,1) 0%, rgba(23,226,201,1) 100%);
+    color: rgb(29, 29, 29);
+    padding: 5px;
+    border-radius: 10px;
+    width: 300px;
+    height: 50px;
+  }
+  
+  .tab .flag {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    border-right: 1px solid rgb(161, 167, 190);
+  }
+  
+  .auto-tab .flag {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    border-right: 1px solid rgb(161, 167, 190);
+  }
+  
+  .tab .flag img {
+    align-self: center;
+    flex-wrap: nowrap;
+    height: 70%;
+  }
+  
+  .tab .name {
+    display: flex;
+    padding-left: 20px;
+    flex: 3;
+    font-size: 20px;
+  }
+  
+  .auto-tab .name {
+    display: flex;
+    padding-left: 20px;
+    flex: 3;
+    font-size: 20px;
+  }
+  
+  .tab .check {
+    color: rgba(23,226,201,1);
+    padding-right: 20px;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+  }
+  
+  .connection-button {
+    display: flex;
+    margin-top: 50px;
+    width: 100px;
+    height: 100px;
+    border: none;
+    border-radius: 50%;
+  }
+  
+  .active {
+    background: rgb(0,179,159);
+    background: linear-gradient(0deg, rgba(0,179,159,1) 0%, rgba(23,226,201,1) 100%);
+  }
+  
+  .inactive {
+    background: rgb(132, 177, 172);
+  }
+  
+  .hidden {
+    visibility: hidden;
+  }
