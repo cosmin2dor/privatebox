@@ -4,6 +4,8 @@
     <?php if(!isset($_SESSION['customer_id'])) : ?>
     <script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="simplevpn-test" ></script>
     <?php endif; ?>
+
+
     <!-- Start Section -->
     <section class="section pb-60">
         <div class="container">
@@ -24,6 +26,12 @@
                         echo(substr($id, 12, 4)." ");
                         ?>
                     </div>
+                    <button class="btn-primary btn btn-xs" data-clipboard-text="<?php
+                        $id = $_SESSION['id'];
+                        echo($id);
+                        ?>">
+                        Copy to Clipboard
+                    </button>
                     <div id="unique-id" style="display: none;">
                         <?php
                         $id = $_SESSION['id'];
@@ -134,6 +142,18 @@
 
     <!-- Charge Bee Script -->
       <script src="assets/js/pricing.js"></script>
+      <script src="assets/js/clipboard.min.js"></script>
+      <script>
+        var clipboard = new ClipboardJS('.btn');
+
+        clipboard.on('success', function(e) {
+            console.log(e);
+        });
+
+        clipboard.on('error', function(e) {
+            console.log(e);
+        });
+    </script>
     <?php include 'footer.php'; ?>
     <?php include 'scripts.php'; ?>
     </body>
