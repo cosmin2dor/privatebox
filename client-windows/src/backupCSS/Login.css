@@ -1,4 +1,4 @@
-:not(input):not(textarea),
+/* :not(input):not(textarea),
 :not(input):not(textarea)::after,
 :not(input):not(textarea)::before {
     -webkit-user-select: none;
@@ -7,7 +7,7 @@
 }
 input, button, textarea, :focus {
     outline: none;
-}
+} */
 
 .container {
     color: white;
@@ -51,4 +51,8 @@ button {
     margin-left: 2em;
     margin-right: 2em;
     align-self: stretch;
+}
+
+.logo {
+    width: 100px;
 }
