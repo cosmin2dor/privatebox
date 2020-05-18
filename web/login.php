@@ -44,7 +44,7 @@
 	$result = callAPI("POST", 
 					  "http://simplevpn.tech:8080/customer",
 					  $data);
-	echo $result;
+	// echo $result;
 	$data = json_decode($result);
 
 	$customer_id = $data->{'customer_id'};
@@ -59,6 +59,8 @@
 	die();
 	}
 	#### START OF THE MAIN CODE ####
+
+	sleep(6);
 
 	if(isset($_SESSION['customer_id'])) {
 		header('Location: '."/pricing.php");

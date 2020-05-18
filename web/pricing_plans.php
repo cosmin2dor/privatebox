@@ -20,7 +20,7 @@
                             </div>
                             <?php if(!isset($_SESSION['customer_id'])) : ?>
                             <div class="pricing__action">
-                                <button type="button" class="btn btn-green btn-stroke btn-rounded pricing__button"><a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="cbdemo_free" style="color:#000000;" >Choose Plan</button>
+                                <button type="button" class="btn btn-green btn-stroke btn-rounded pricing__button"><a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="cbdemo_free" style="color:#000000;" >Choose Plan</a></button>
                             </div>
                             <?php endif; ?>
                         </div>
@@ -45,7 +45,9 @@
                             </div>
                             <?php if(!isset($_SESSION['customer_id'])) : ?>
                             <div class="pricing__action">
-                                <button type="button" class="btn btn-primary btn-stroke btn-rounded pricing__button"><a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="premium" style="color:#000000;">Choose Plan</a></button>
+                                <button type="button" class="btn btn-primary btn-stroke btn-rounded pricing__button disabled"><!-- <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="premium" style="color:#000000;">Choose Plan</a> -->
+                                    Unavailable
+                                </button>
                             </div>
                             <?php endif; ?>
                         </div>
@@ -71,7 +73,8 @@
                             <?php if(!isset($_SESSION['customer_id'])) : ?>
                             <div class="pricing__action">
                                 <button type="button" class="btn btn-red btn-stroke btn-rounded pricing__button">
-                                <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="ultra" style="color:#000000;">Choose Plan</a>
+                                <!-- <a href="javascript:void(0)" data-cb-type="checkout" data-cb-plan-id="ultra" style="color:#000000;">Choose Plan</a> -->
+                                Unavailable
                                 </button>
                             </div>
                             <?php endif; ?>

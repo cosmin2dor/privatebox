@@ -47,6 +47,10 @@
                         Save your account number on a piece of paper or on your computer safely. 
                         This is your way into the account.
                     </h3>
+
+                    <h4 style="color:red">
+                        We are currently in a testing period. All paid accounts are unavailable and subject to changes.
+                    </h4>
                 </div>
             </div>
             <?php
@@ -86,7 +90,7 @@
                         <tr>
                           <td class="option">Customer Support</td>
                           <td>-</td>
-                          <td>9:00 - 17:00</td>
+                          <td><i class="fa fa-check"></i></td>
                           <td>Dedicated</td>
                         </tr>
                         <tr>
@@ -130,6 +134,12 @@
                           <td>-</td>
                           <td>-</td>
                           <td><i class="fa fa-check"></i></td>
+                        </tr>
+                        <tr>
+                          <td class="option">Target customer</td>
+                          <td>Censored User</td>
+                          <td>Media Consumer</td>
+                          <td>VIP</td>
                         </tr>
                       </tbody>
                     </table>
