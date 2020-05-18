@@ -60,7 +60,6 @@
 	}
 	#### START OF THE MAIN CODE ####
 
-	sleep(6);
 
 	if(isset($_SESSION['customer_id'])) {
 		header('Location: '."/pricing.php");
@@ -71,6 +70,7 @@
     if(get_customer_id($_POST['id']) == false)
     	$error = "Authentication failed.";
    }elseif(isset($_GET['id'])){
+	sleep(6);
    	if(get_customer_id($_GET['id']) == false)
     	$error = "Authentication failed.";
    }
