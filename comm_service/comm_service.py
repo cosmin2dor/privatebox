@@ -4,6 +4,7 @@ import sys
 import json
 import utils
 import logging
+import traceback
 import requests
 import threading
 from time import sleep
@@ -17,6 +18,7 @@ PORT_RANGE_END     = 55555
 DEFAULT_PORT_1     = 45555
 DEFAULT_PORT_2     = 55555
 
+API_ENDPOINT       = "172.25.0.1"
 API_PORT           = 8080
 
 DNS_DEFAULT        = "8.8.8.8"
@@ -27,7 +29,7 @@ NODE_INTERFACE     = "simpleVPN-node"
 INTRANET_NETWORK   = os.getenv("INTRA_ADDR", default="127.0.0.1")
 
 # 2 hours
-CONNECTION_TIMEOUT = 7200
+CONNECTION_TIMEOUT = 30
 REMOVAL_DELAY = 10
 
 def timeout_handler(pubKey):
@@ -46,8 +48,7 @@ def timeout_handler(pubKey):
         service.device_revoked(pubKey)
 
         # Inform API that this client was disconnected
-        url = "http://{addr}:{api_port}/timeout_client".\
-            format(service.wg_o.server_addr, API_PORT)
+        url = "http://{}:{}/timeout_client".format(API_ENDPOINT, API_PORT)
         data = {
             'pubKey': pubKey
         }
@@ -56,7 +57,7 @@ def timeout_handler(pubKey):
         if r.status_code != 200:
             logging.debug("Timeout notification failed with {}".format(r.status_code))
     except:
-        pass
+        traceback.print_exc()
 
 def delayed_remove(pubKey, interface):
     logging.debug("Delayed Removing {}".format(pubKey))
