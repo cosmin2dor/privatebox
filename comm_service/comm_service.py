@@ -29,7 +29,7 @@ NODE_INTERFACE     = "simpleVPN-node"
 INTRANET_NETWORK   = os.getenv("INTRA_ADDR", default="127.0.0.1")
 
 # 2 hours
-CONNECTION_TIMEOUT = 30
+CONNECTION_TIMEOUT = 7200
 REMOVAL_DELAY = 10
 
 def timeout_handler(pubKey):
