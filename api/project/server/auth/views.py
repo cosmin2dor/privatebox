@@ -601,7 +601,7 @@ class KeepAliveAPI(MethodView):
                 return make_response(jsonify(response_object)), 402
 
             if not is_device_connected(pub_key):
-                logging.error("Keep alive from not connected device {}".format(pubKey))
+                logging.error("Keep alive from not connected device {}".format(pub_key))
                 response_object = {
                     'status': 'fail',
                     'message': 'Device not connected.'
