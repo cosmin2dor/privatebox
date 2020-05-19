@@ -651,7 +651,7 @@ revoke_view = RevokeAPI.as_view('revoke_api')
 webhook_view = WebHookAPI.as_view('webhook_api')
 customerid_view = CustomerIdAPI.as_view('customerid_api')
 timeout_view = TimeoutAPI.as_view('timeout_api')
-keepalive_view = TimeoutAPI.as_view('keepalive_api')
+keepalive_view = KeepAliveAPI.as_view('keepalive_api')
 
 # add Rules for API Endpoints
 auth_blueprint.add_url_rule(
