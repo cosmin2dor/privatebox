@@ -119,7 +119,7 @@ class WebHookAPI(MethodView):
 
         unique_id = post_data.get("content").get("customer").get("cf_account_id")
         customer_id = post_data.get("content").get("customer").get("id")
-        
+
         if not unique_id or not customer_id:
                 response_object = {
                     'status': 'fail',
@@ -127,7 +127,7 @@ class WebHookAPI(MethodView):
                     'parameter' : 'content:customer:cd_account_id' if not unique_id else 'content:customer:id',
                 }
                 return make_response(jsonify(response_object)), 401
-        
+
         #print(post_data)
         print(unique_id)
         # check if user already exists
@@ -536,6 +536,31 @@ class RevokeAPI(MethodView):
             return make_response(jsonify(response_object)), 401
 
 
+class TimeoutAPI(MethodView):
+    """
+    Timeout notify Resource
+    """
+
+    @staticmethod
+    def post():
+        if request.is_json:
+            req = request.get_json()
+            pub_key = req.get('pub_key')
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'Request was not JSON.'
+            }
+            return make_response(jsonify(response_object)), 402
+
+        device_disconnected(pub_key)
+
+        response_object = {
+            'status': 'success',
+        }
+        return make_response(jsonify(response_object)), 200
+
+
 # define the API resources
 generation_view = GenerateAPI.as_view('generate_api')
 registration_view = RegisterAPI.as_view('register_api')
@@ -547,6 +572,7 @@ connection_view = ConnectionAPI.as_view('connection_api')
 revoke_view = RevokeAPI.as_view('revoke_api')
 webhook_view = WebHookAPI.as_view('webhook_api')
 customerid_view = CustomerIdAPI.as_view('customerid_api')
+timeout_view = TimeoutAPI.as_view('timeout_api')
 
 # add Rules for API Endpoints
 auth_blueprint.add_url_rule(
@@ -599,4 +625,8 @@ auth_blueprint.add_url_rule(
     view_func=customerid_view,
     methods=['POST']
 )
-
+auth_blueprint.add_url_rule(
+    '/timeout_client',
+    view_func=timeout_view,
+    methods=['POST']
+)
