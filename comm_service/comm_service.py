@@ -17,6 +17,8 @@ PORT_RANGE_END     = 55555
 DEFAULT_PORT_1     = 45555
 DEFAULT_PORT_2     = 55555
 
+API_PORT           = 8080
+
 DNS_DEFAULT        = "8.8.8.8"
 WG_NETWORK_DEFAULT = "10.10.0.0/16"
 
@@ -42,11 +44,19 @@ def timeout_handler(pubKey):
     try:
         service.wg_o.remove_peer(pubKey, NODE_INTERFACE)
         service.device_revoked(pubKey)
-        # TODO Inform API that this client was disconnected
+
+        # Inform API that this client was disconnected
+        url = "http://{addr}:{api_port}/timeout_client".\
+            format(service.wg_o.server_addr, API_PORT)
+        data = {
+            'pubKey': pubKey
+        }
+
+        r = requests.post(url, data)
+        if r.status_code != 200:
+            logging.debug("Timeout notification failed with {}".format(r.status_code))
     except:
         pass
-
-    pass
 
 def delayed_remove(pubKey, interface):
     logging.debug("Delayed Removing {}".format(pubKey))
