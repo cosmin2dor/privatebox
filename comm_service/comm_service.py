@@ -50,7 +50,7 @@ def timeout_handler(pubKey):
         # Inform API that this client was disconnected
         url = "http://{}:{}/timeout_client".format(API_ENDPOINT, API_PORT)
         data = {
-            'pubKey': pubKey
+            'pub_key': pubKey
         }
 
         r = requests.post(url, data)
