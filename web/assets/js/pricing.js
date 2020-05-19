@@ -42,8 +42,9 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             step: function(value) {
                 // value -> which step in checkout
-                // console.log(value);
-          
+                console.log(value);
+                if(value == "thankyou_screen")
+                  window.location.replace("/login.php?id="+id.trim());
             }
         }
       });
