@@ -53,7 +53,7 @@ def timeout_handler(pubKey):
             'pub_key': pubKey
         }
 
-        r = requests.post(url, data)
+        r = requests.post(url, json=data)
         if r.status_code != 200:
             logging.debug("Timeout notification failed with {}".format(r.status_code))
     except:
