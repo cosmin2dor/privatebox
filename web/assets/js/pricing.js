@@ -17,7 +17,9 @@ document.addEventListener("DOMContentLoaded", function() {
       var cart = cbInstance.getCart();
       // Date should be in YYYY-MM-DD
       // cart.setCustomer({email: "vivek@chargebee.com", cf_test: "customer custom field", cf_date: "1991-09-16"});
-      cart.setCustomer({cf_account_id: "1234"});
+      var id = document.getElementById("unique-id").innerHTML;
+      console.log(id)
+      cart.setCustomer({cf_account_id: id});
 
       cbInstance.setCheckoutCallbacks(function(cart) {
         // You can get the plan name for which the checkout happened like below
@@ -26,13 +28,13 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log(product.addons);
         return {
             loaded: function() {
-                console.log("checkout opened");
+                // console.log("checkout opened");
             },
             close: function() {
-                console.log("checkout closed");
+                // console.log("checkout closed");
             },
             success: function(hostedPageId) {
-              console.log(hostedPageId);
+              // console.log(hostedPageId);
               // Hosted page id will be unique token for the checkout that happened
               // You can pass this hosted page id to your backend 
               // and then call our retrieve hosted page api to get subscription details
@@ -41,7 +43,8 @@ document.addEventListener("DOMContentLoaded", function() {
             step: function(value) {
                 // value -> which step in checkout
                 console.log(value);
-          
+                if(value == "thankyou_screen")
+                  window.location.replace("/login.php?id="+id.trim());
             }
         }
       });

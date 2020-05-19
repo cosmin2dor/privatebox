@@ -9,8 +9,8 @@ class Authentication {
     static instance;
     
     constructor () {
-        if (instance) {
-            return instance
+        if (Authentication.instance) {
+            return Authentication.instance
         }
 
         this.store = new Store()
@@ -174,6 +174,8 @@ class Authentication {
                 this.expireDate = data.expireDate
 
                 log.debug("Login was successfully.")
+            } catch {
+                
             }
         })
     }
