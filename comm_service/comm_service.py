@@ -26,6 +26,7 @@ INTRANET_NETWORK   = os.getenv("INTRA_ADDR", default="127.0.0.1")
 
 # 2 hours
 CONNECTION_TIMEOUT = 7200
+REMOVAL_DELAY = 10
 
 def timeout_handler(pubKey):
     logging.debug("Client timout. Disconnecting {}".format(pubKey))
@@ -46,6 +47,14 @@ def timeout_handler(pubKey):
         pass
 
     pass
+
+def delayed_remove(pubKey, interface):
+    logging.debug("Delayed Removing {}".format(pubKey))
+
+    try:
+        service.wg_o.remove_peer(pubKey, interface)
+    except:
+        logging.error("There was an error Delayed Removing {}".format(pubKey))
 
 class Service:
     def __init__(self):
@@ -164,14 +173,9 @@ def revoke_connection():
             response = "Cannot revoke, device not connected."
         )
 
-    try:
-        service.wg_o.remove_peer(pubKey, NODE_INTERFACE)
-    except:
-        logging.error("WG.remove_peer fails")
-        return Response(
-            status = 500,
-            response = "Server cannot revoke the client. Internal Error."
-        )
+    # Delay the removal of the client
+    threading.Timer(REMOVAL_DELAY, delayed_remove, kwargs={'pubKey': pubKey,\
+        'interface': NODE_INTERFACE}).start()
 
     # Client revoked successfully
     service.device_revoked(pubKey)
