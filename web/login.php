@@ -35,7 +35,8 @@
 
 	function get_customer_id($id){
 		#TODO validate the id received
-	$id = str_replace(' ', '', $id);
+	$id = str_replace(
+        ' ', '', $id);
 	if(!isset($id))
 		return false;
 
@@ -121,7 +122,9 @@
 	            </div>
 	        </div>
 	    </section>
-    <div class="section__divider section__divider-right d-none d-lg-block"></div>
+    <section class="section pb-40">
+        <div class="section__divider section__divider-right d-none d-lg-block" style="height:100px"></div>
+    </section>
 
 
 	 <section class="section pb-40">
