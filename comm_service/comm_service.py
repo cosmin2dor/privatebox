@@ -4,6 +4,7 @@ import sys
 import json
 import utils
 import logging
+import traceback
 import requests
 import threading
 from time import sleep
@@ -17,6 +18,9 @@ PORT_RANGE_END     = 55555
 DEFAULT_PORT_1     = 45555
 DEFAULT_PORT_2     = 55555
 
+API_ENDPOINT       = "172.25.0.1"
+API_PORT           = 8080
+
 DNS_DEFAULT        = "8.8.8.8"
 WG_NETWORK_DEFAULT = "10.10.0.0/16"
 
@@ -26,6 +30,7 @@ INTRANET_NETWORK   = os.getenv("INTRA_ADDR", default="127.0.0.1")
 
 # 2 hours
 CONNECTION_TIMEOUT = 7200
+REMOVAL_DELAY = 10
 
 def timeout_handler(pubKey):
     logging.debug("Client timout. Disconnecting {}".format(pubKey))
@@ -41,11 +46,26 @@ def timeout_handler(pubKey):
     try:
         service.wg_o.remove_peer(pubKey, NODE_INTERFACE)
         service.device_revoked(pubKey)
-        # TODO Inform API that this client was disconnected
-    except:
-        pass
 
-    pass
+        # Inform API that this client was disconnected
+        url = "http://{}:{}/timeout_client".format(API_ENDPOINT, API_PORT)
+        data = {
+            'pub_key': pubKey
+        }
+
+        r = requests.post(url, json=data)
+        if r.status_code != 200:
+            logging.debug("Timeout notification failed with {}".format(r.status_code))
+    except:
+        traceback.print_exc()
+
+def delayed_remove(pubKey, interface):
+    logging.debug("Delayed Removing {}".format(pubKey))
+
+    try:
+        service.wg_o.remove_peer(pubKey, interface)
+    except:
+        logging.error("There was an error Delayed Removing {}".format(pubKey))
 
 class Service:
     def __init__(self):
@@ -164,14 +184,9 @@ def revoke_connection():
             response = "Cannot revoke, device not connected."
         )
 
-    try:
-        service.wg_o.remove_peer(pubKey, NODE_INTERFACE)
-    except:
-        logging.error("WG.remove_peer fails")
-        return Response(
-            status = 500,
-            response = "Server cannot revoke the client. Internal Error."
-        )
+    # Delay the removal of the client
+    threading.Timer(REMOVAL_DELAY, delayed_remove, kwargs={'pubKey': pubKey,\
+        'interface': NODE_INTERFACE}).start()
 
     # Client revoked successfully
     service.device_revoked(pubKey)
