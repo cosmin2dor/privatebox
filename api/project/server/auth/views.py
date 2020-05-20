@@ -655,62 +655,62 @@ keepalive_view = KeepAliveAPI.as_view('keepalive_api')
 
 # add Rules for API Endpoints
 auth_blueprint.add_url_rule(
-    '/auth/register',
+    '/api/auth/register',
     view_func=registration_view,
     methods=['POST']
 )
 auth_blueprint.add_url_rule(
-    '/auth/login',
+    '/api/auth/login',
     view_func=login_view,
     methods=['POST']
 )
 auth_blueprint.add_url_rule(
-    '/auth/status',
+    '/api/auth/status',
     view_func=user_view,
     methods=['GET']
 )
 auth_blueprint.add_url_rule(
-    '/auth/logout',
+    '/api/auth/logout',
     view_func=logout_view,
     methods=['POST']
 )
 auth_blueprint.add_url_rule(
-    '/auth/generate',
+    '/api/auth/generate',
     view_func=generation_view,
     methods=['GET']
 )
 auth_blueprint.add_url_rule(
-    '/get_locations',
+    '/api/get_locations',
     view_func=locations_view,
     methods=['GET']
 )
 auth_blueprint.add_url_rule(
-    '/request_connection',
+    '/api/request_connection',
     view_func=connection_view,
     methods=['POST']
 )
 auth_blueprint.add_url_rule(
-    '/revoke_connection',
+    '/api/revoke_connection',
     view_func=revoke_view,
     methods=['POST']
 )
 auth_blueprint.add_url_rule(
-    '/webhook',
+    '/api/webhook',
     view_func=webhook_view,
     methods=['POST']
 )
 auth_blueprint.add_url_rule(
-    '/customer',
+    '/api/customer',
     view_func=customerid_view,
     methods=['POST']
 )
 auth_blueprint.add_url_rule(
-    '/timeout_client',
+    '/api/timeout_client',
     view_func=timeout_view,
     methods=['POST']
 )
 auth_blueprint.add_url_rule(
-    '/keep_alive',
+    '/api/keep_alive',
     view_func=keepalive_view,
     methods=['POST']
 )

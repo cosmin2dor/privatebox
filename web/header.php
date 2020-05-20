@@ -39,23 +39,26 @@
                 <li><a href="about_us.php">All about trust</a></li>
                 <li><a href="free.php">How it works</a></li>
                 <?php if(isset($_SESSION['loggedin'])) : ?>
-                    <li><a href="pricing.php">Pricing</a></li>
+                    <li><a href="pricing.php" >Pricing</a></li>
                 <?php else: ?>
                     <li><a href="pricing.php?generate=1">Pricing</a></li>
                 <?php endif; ?>
-            <ul class="attributes">
+            <!-- <ul class="attributes"> -->
                 <?php if(isset($_SESSION['loggedin'])) : ?>
-                    <li class="header__button"><a href="pricing.php" class="btn btn-primary btn-rounded btn-xs btn-header">Account</a></li>
+                    <li><a class="button btn-xs" href="pricing.php" >Account</a></li>
                     <?php if(isset($_SESSION['customer_id'])) : ?>
-                    <li class="header__button"><a href="session.php?logout=1" class="btn btn-primary btn-rounded btn-xs btn-header">Log Out</a></li>
+                    <li><a href="session.php?logout=1">Log Out</a></li>
                     <?php endif; ?>
                 <?php else : ?>
-                    <li class="header__button"><a href="pricing.php?generate=1" class="btn btn-primary btn-rounded btn-xs btn-header">Generate Account</a></li>
+                    <li><a href="pricing.php?generate=1">Generate Account</a></li>
                 <?php endif; ?>
                 <?php if(!isset($_SESSION['customer_id'])) : ?>
-                <li class="header__button"><a href="login.php" class="btn btn-primary btn-rounded btn-xs btn-header">Log In</a></li>
+                <li><a href="login.php">Log In</a></li>
                 <?php endif; ?>
-            </ul>
+            <!-- </ul> -->
         </nav>
+
     </header>
     <!-- End Header -->
+    <div class="section__divider section__divider-left" style="height:100px"></div>
+    
