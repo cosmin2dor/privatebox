@@ -18,8 +18,7 @@ PORT_RANGE_END     = 55555
 DEFAULT_PORT_1     = 45555
 DEFAULT_PORT_2     = 55555
 
-API_ENDPOINT       = "172.25.0.1"
-API_PORT           = 8080
+API_ENDPOINT       = "simplevpn.tech"
 
 DNS_DEFAULT        = "8.8.8.8"
 WG_NETWORK_DEFAULT = "10.10.0.0/16"
@@ -48,7 +47,7 @@ def timeout_handler(pubKey):
         service.device_revoked(pubKey)
 
         # Inform API that this client was disconnected
-        url = "http://{}:{}/timeout_client".format(API_ENDPOINT, API_PORT)
+        url = "https://{}/api/timeout_client".format(API_ENDPOINT)
         data = {
             'pub_key': pubKey
         }
