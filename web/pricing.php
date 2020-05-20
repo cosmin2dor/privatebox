@@ -152,7 +152,10 @@
 
 
     <!-- Charge Bee Script -->
-      <script src="assets/js/pricing.js"></script>
+      <script id="pricing-script-tag" src="assets/js/pricing.js" data-id=" <?php
+                        $id = $_SESSION['id'];
+                        echo($id);
+                        ?>"></script>
       <script src="assets/js/clipboard.min.js"></script>
       <script>
         var clipboard = new ClipboardJS('.btn');

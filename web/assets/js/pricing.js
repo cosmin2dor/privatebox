@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", function() {
       var cart = cbInstance.getCart();
       // Date should be in YYYY-MM-DD
       // cart.setCustomer({email: "vivek@chargebee.com", cf_test: "customer custom field", cf_date: "1991-09-16"});
-      var id = document.getElementById("unique-id").innerHTML;
+      var script_tag = document.getElementById('pricing-script-tag');
+      var id = script_tag.getAttribute("data-id");
       console.log(id)
       cart.setCustomer({cf_account_id: id});
 

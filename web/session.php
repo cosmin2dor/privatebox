@@ -21,8 +21,7 @@ if(isset($_GET["logout"]) && $_GET["logout"] == 1){
 
 if(isset($_GET["generate"]) && $_GET["generate"] == 1 && !isset($_SESSION['loggedin'])) {
 
-    #TODO Change to https
-	$url = 'http://simplevpn.tech:8080/auth/generate';
+	$url = 'https://simplevpn.tech/api/auth/generate';
 	$json = file_get_contents($url);
 	$data = json_decode($json);
 	$id = $data->{'unique_id'};

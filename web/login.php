@@ -40,11 +40,10 @@
 		return false;
 
 	$data = "{\"unique_id\":\"".$id."\"}";
-	#TODO change to https
 	$result = callAPI("POST", 
-					  "http://simplevpn.tech:8080/customer",
+					  "https://simplevpn.tech/api/customer",
 					  $data);
-	// echo $result;
+	echo $result;
 	$data = json_decode($result);
 
 	$customer_id = $data->{'customer_id'};
