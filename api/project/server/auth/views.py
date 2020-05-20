@@ -119,7 +119,7 @@ class WebHookAPI(MethodView):
 
         unique_id = post_data.get("content").get("customer").get("cf_account_id")
         customer_id = post_data.get("content").get("customer").get("id")
-        
+
         if not unique_id or not customer_id:
                 response_object = {
                     'status': 'fail',
@@ -127,7 +127,7 @@ class WebHookAPI(MethodView):
                     'parameter' : 'content:customer:cd_account_id' if not unique_id else 'content:customer:id',
                 }
                 return make_response(jsonify(response_object)), 401
-        
+
         #print(post_data)
         print(unique_id)
         # check if user already exists
@@ -536,6 +536,109 @@ class RevokeAPI(MethodView):
             return make_response(jsonify(response_object)), 401
 
 
+class TimeoutAPI(MethodView):
+    """
+    Timeout notify Resource
+    """
+
+    @staticmethod
+    def post():
+        if request.is_json:
+            req = request.get_json()
+            pub_key = req.get('pub_key')
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'Request was not JSON.'
+            }
+            return make_response(jsonify(response_object)), 402
+
+        device_disconnected(pub_key)
+
+        response_object = {
+            'status': 'success',
+        }
+        return make_response(jsonify(response_object)), 200
+
+
+class KeepAliveAPI(MethodView):
+    """
+    KeepAlive proxy
+    """
+
+    @staticmethod
+    def post():
+        # get the auth token
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            try:
+                auth_token = auth_header.split(" ")[1]
+            except IndexError:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Bearer token malformed.'
+                }
+                return make_response(jsonify(response_object)), 401
+        else:
+            auth_token = ''
+        if auth_token:
+            resp = User.decode_auth_token(auth_token)
+            if isinstance(resp, str):
+                response_object = {
+                    'status': 'fail',
+                    'message': resp
+                }
+                return make_response(jsonify(response_object)), 401
+
+            if request.is_json:
+                req = request.get_json()
+                pub_key = req.get('pub_key')
+            else:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Request was not JSON.'
+                }
+                return make_response(jsonify(response_object)), 402
+
+            if not is_device_connected(pub_key):
+                logging.error("Keep alive from not connected device {}".format(pub_key))
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Device not connected.'
+                }
+                return make_response(jsonify(response_object)), 402
+
+            (node_endpoint, node_comm_port) = get_node_from(pub_key)
+            if node_endpoint is None or node_comm_port is None:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Device connected, but node is not found.'
+                }
+                return make_response(jsonify(response_object)), 500
+
+            url = 'http://' + node_endpoint + ':' + str(node_comm_port) + '/keep_alive'
+
+            response = requests.post(url, json={'pub_key': pub_key})
+            if response.status_code != 200:
+                response_object = {
+                    'status': 'fail',
+                    'message': response.content
+                }
+                return make_response(jsonify(response_object)), response.status_code
+
+            response_object = {
+                'status': 'success',
+                'message': 'Keep alive successfully'
+            }
+            return make_response(jsonify(response_object)), 200
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'Provide a valid auth token.'
+            }
+            return make_response(jsonify(response_object)), 401
+
+
 # define the API resources
 generation_view = GenerateAPI.as_view('generate_api')
 registration_view = RegisterAPI.as_view('register_api')
@@ -547,6 +650,8 @@ connection_view = ConnectionAPI.as_view('connection_api')
 revoke_view = RevokeAPI.as_view('revoke_api')
 webhook_view = WebHookAPI.as_view('webhook_api')
 customerid_view = CustomerIdAPI.as_view('customerid_api')
+timeout_view = TimeoutAPI.as_view('timeout_api')
+keepalive_view = KeepAliveAPI.as_view('keepalive_api')
 
 # add Rules for API Endpoints
 auth_blueprint.add_url_rule(
@@ -599,4 +704,13 @@ auth_blueprint.add_url_rule(
     view_func=customerid_view,
     methods=['POST']
 )
-
+auth_blueprint.add_url_rule(
+    '/timeout_client',
+    view_func=timeout_view,
+    methods=['POST']
+)
+auth_blueprint.add_url_rule(
+    '/keep_alive',
+    view_func=keepalive_view,
+    methods=['POST']
+)
