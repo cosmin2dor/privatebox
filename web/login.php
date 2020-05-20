@@ -35,16 +35,16 @@
 
 	function get_customer_id($id){
 		#TODO validate the id received
-	$id = str_replace(' ', '', $id);
+	$id = str_replace(
+        ' ', '', $id);
 	if(!isset($id))
 		return false;
 
 	$data = "{\"unique_id\":\"".$id."\"}";
-	#TODO change to https
 	$result = callAPI("POST", 
-					  "http://simplevpn.tech:8080/customer",
+					  "https://simplevpn.tech/api/customer",
 					  $data);
-	// echo $result;
+	echo $result;
 	$data = json_decode($result);
 
 	$customer_id = $data->{'customer_id'};
@@ -122,7 +122,9 @@
 	            </div>
 	        </div>
 	    </section>
-    <div class="section__divider section__divider-right d-none d-lg-block"></div>
+    <section class="section pb-40">
+        <div class="section__divider section__divider-right d-none d-lg-block" style="height:100px"></div>
+    </section>
 
 
 	 <section class="section pb-40">
