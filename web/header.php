@@ -57,5 +57,8 @@
                 <?php endif; ?>
             <!-- </ul> -->
         </nav>
+
     </header>
     <!-- End Header -->
+    <div class="section__divider section__divider-left" style="height:100px"></div>
+    

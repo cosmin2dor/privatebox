@@ -5,7 +5,6 @@
     <script src="https://js.chargebee.com/v2/chargebee.js" data-cb-site="simplevpn-test" ></script>
     <?php endif; ?>
 
-    <div class="section__divider section__divider-left" style="height:100px"></div>
 
     <!-- Start Section -->
     <section class="section pb-60">
