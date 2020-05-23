@@ -47,7 +47,7 @@ def timeout_handler(pubKey):
         service.device_revoked(pubKey)
 
         # Inform API that this client was disconnected
-        url = "https://{}/api/timeout_client".format(API_ENDPOINT)
+        url = "http://{}:8080/timeout_client".format(API_ENDPOINT)
         data = {
             'pub_key': pubKey
         }
