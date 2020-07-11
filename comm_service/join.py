@@ -12,7 +12,7 @@ class Join:
 
     def get_user_data(self):
         try:
-            user_data = requests.get(METADATA_URL, timeout=10)
+            user_data = requests.get(METADATA_URL, timeout=10).content
 
             return json.loads(user_data)
         except requests.exceptions.RequestException as e:
@@ -38,5 +38,10 @@ class Join:
         with open(WG_CONF_DIR + "/comm.conf", "w") as file:
             file.write(config)
 
+    def start_interface(self):
+        os.system('wg-quick up comm')
+
 if __name__ == "__main__":
     join = Join()
+    join.generate_config()
+    join.start_interface()
