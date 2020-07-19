@@ -142,7 +142,6 @@ class WG:
 
     @staticmethod
     def start_raw_interface(interface, config):
-        #self.stop_interface(interface)
         logging.debug("Starting raw interface {}...".format(interface))
         conf_path = "{}/{}.conf".format(WG_CONF_DIR, interface)
 
@@ -175,7 +174,8 @@ class WG:
             logging.error("There was an error starting the {} interface.".format(interface))
             raise
 
-    def stop_interface(self, interface):
+    @staticmethod
+    def stop_interface(interface):
         logging.debug("Stopping interface {}...".format(interface))
 
         try:

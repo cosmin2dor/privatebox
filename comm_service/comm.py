@@ -3,13 +3,10 @@ import sys
 import logging
 import service
 import join
+import wg
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG, filename='comm.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s')
-
-    # Internal VPN network used for core-node communication
-    # TODO Remove default
-    COMM_NETWORK = os.getenv("COMM_NETWORK", default="127.0.0.1")
 
     # The external endpoint
     CORE_ADDRESS = "simplevpn.tech"
@@ -19,11 +16,12 @@ if __name__ == '__main__':
     # Interface for encrypted communication
     COMM_INTERFACE = "TunnelPeer-comm"
 
-    if COMM_NETWORK is None:
-        logging.error("COMM_NETWORK not set.")
-        sys.exit(0)
-
     # Join the encrypted network within the organization
-    join.Join(COMM_INTERFACE).start()
+    wg.WG.stop_interface(COMM_INTERFACE)
+    j = join.Join(COMM_INTERFACE)
+    j.start()
+
+    comm_address = j.user_data['address'].split('/')[0]
     # Start the manager service
-    service.Service(NODE_INTERFACE, COMM_NETWORK).start()
+    wg.WG.stop_interface(NODE_INTERFACE)
+    service.Service(NODE_INTERFACE, comm_address).start()

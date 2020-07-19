@@ -2,6 +2,7 @@ electron-builder.yml
 node_modules/
 dist/
 venv/
+.idea/
 *.exe
 *.pyc
 *.log

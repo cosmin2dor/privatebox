@@ -1,4 +1,3 @@
-import os
 import wg
 import json
 import requests
