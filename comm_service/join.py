@@ -6,7 +6,7 @@ import logging
 DEBUG = True
 
 if DEBUG:
-    METADATA_URL = "http://127.0.0.1:4444/latest/user-data"
+    METADATA_URL = "http://172.17.0.1:4444/latest/user-data"
 else:
     METADATA_URL = "http://169.254.169.254/latest/user-data"
 

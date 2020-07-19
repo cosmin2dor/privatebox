@@ -145,7 +145,7 @@ class WG:
         logging.debug("Starting raw interface {}...".format(interface))
         conf_path = "{}/{}.conf".format(WG_CONF_DIR, interface)
 
-        with open(conf_path, 'w') as file:
+        with open(conf_path, 'w+') as file:
             file.write(config)
 
         try:
