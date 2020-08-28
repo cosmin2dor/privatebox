@@ -83,7 +83,7 @@ class TestWG(unittest.TestCase):
         self.assertEqual(pubKey1, pubKey2)
         self.assertEqual(privKey1, privKey2)
 
-    def test_start_server(self):
+    def test_start_interface(self):
         conf_path = "{}/{}.conf".format(WG_DIR, INTERFACE)
 
         try:
@@ -92,19 +92,19 @@ class TestWG(unittest.TestCase):
             pass
 
         wg_obj = wg.WG(NETWORK, WG_PORT, DNS)
-        wg_obj.start_server(INTERFACE)
+        wg_obj.start_interface(INTERFACE)
 
         self.assertTrue(os.path.exists(conf_path))
 
         time.sleep(5)
 
-        wg_obj.stop_server(INTERFACE)
+        wg_obj.stop_interface(INTERFACE)
 
         time.sleep(5)
 
     def test_add_peer(self):
         wg_obj = wg.WG(NETWORK, WG_PORT, DNS)
-        wg_obj.start_server(INTERFACE)
+        wg_obj.start_interface(INTERFACE)
 
         time.sleep(5)
 
@@ -114,7 +114,7 @@ class TestWG(unittest.TestCase):
 
         wg_obj.add_peer(PEER_PUBKEY, "{}/32".format(host), INTERFACE)
 
-        # wg_obj.stop_server(INTERFACE)
+        # wg_obj.stop_interface(INTERFACE)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG, filename='wg.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')

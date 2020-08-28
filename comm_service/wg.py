@@ -13,6 +13,7 @@ KEY_PRIVATE = 'privatekey'
 KEY_PUBLIC = 'publickey'
 KEYS_MODE = 0o700
 
+
 class WG:
     def __init__(self, network_addr, wg_port, dns):
         self.network_addr = network_addr
@@ -71,7 +72,7 @@ class WG:
         public_path = WG_KEYS_DIR + "/" + KEY_PUBLIC
 
         if (not os.path.exists(private_path)) or \
-            (not os.path.exists(public_path)):
+                (not os.path.exists(public_path)):
             # Generate keys
             try:
                 os.system('umask 077')
@@ -96,60 +97,106 @@ class WG:
     def get_privKey(self):
         return self.privKey
 
-    def generate_config(self):
+    @staticmethod
+    def generate_config(address, private_key, dns=None, listen_port=None, is_post=False):
+        config = "[Interface]\n" + \
+                 "Address = {}\n".format(address) + \
+                 "PrivateKey = {}\n".format(private_key)
 
+        if dns is not None:
+            config += "DNS = {}\n".format(dns)
+
+        if listen_port is not None:
+            config += "ListenPort = {}\n".format(listen_port)
+
+        if is_post:
+            try:
+                iface = subprocess.check_output('ip r s default | cut -d " " -f5', shell=True).decode('utf-8').strip()
+            except:
+                iface = 'ens3'
+
+            base_cmd = "iptables {action} FORWARD -i %i -j ACCEPT; iptables " + \
+                       "{action} FORWARD -o %i -j ACCEPT; iptables -t nat {action} POSTROUTING " + \
+                       "-o {interface} -j MASQUERADE"
+
+            post_up = base_cmd.format(action='-A', interface=iface)
+            post_down = base_cmd.format(action='-D', interface=iface)
+
+            config += "PostUp = {}\n".format(post_up)
+            config += "PostUp = {}\n".format(post_down)
+
+        return config
+
+    @staticmethod
+    def set_ipv4_forwarding(value):
         try:
-            iface = subprocess.check_output('ip r s default | cut -d " " -f5', \
-                shell=True).decode('utf-8').strip()
+            err = subprocess.call(["sysctl", "-w", "net.ipv4.ip_forward={}".format(value)])
+
+            if err:
+                logging.debug("Setting ipv4 forwarding to {} failed".format(value))
+            else:
+                logging.debug("Setting ipv4 forwarding to {} successfully".format(value))
+
         except:
-            iface = 'ens3'
+            logging.debug("Setting ipv4 forwarding to {} failed".format(value))
 
-        base_cmd = "iptables {action} FORWARD -i %i -j ACCEPT; iptables " + \
-        "{action} FORWARD -o %i -j ACCEPT; iptables -t nat {action} POSTROUTING " + \
-        "-o {interface} -j MASQUERADE"
-
-        ip_with_mask = "{}/{}".format(str(self.server_addr), self.network.prefixlen)
-
-        post_up = base_cmd.format(action='-A', interface=iface)
-        post_down = base_cmd.format(action='-D', interface=iface)
-
-        return "" + \
-        "[Interface]\n" + \
-        "Address = {}\n".format(ip_with_mask) + \
-        "DNS = {}\n".format(self.dns) + \
-        "PrivateKey = {}\n".format(self.get_privKey()) + \
-        "ListenPort = {}\n".format(self.wg_port) + \
-        "PostUp = {}\n".format(post_up) + \
-        "PostDown = {}\n".format(post_down)
-
-    def start_server(self, interface):
-        self.stop_server(interface)
-        logging.debug("Starting server...")
+    @staticmethod
+    def start_raw_interface(interface, config):
+        logging.debug("Starting raw interface {}...".format(interface))
         conf_path = "{}/{}.conf".format(WG_CONF_DIR, interface)
 
         with open(conf_path, 'w+') as file:
-            content = self.generate_config()
+            file.write(config)
+
+        try:
+            os.system('wg-quick up {}'.format(interface))
+        except:
+            logging.error("There was an error starting the raw {} interface.".format(interface))
+            raise
+
+    def start_interface(self, interface):
+        self.stop_interface(interface)
+        logging.debug("Starting interface {}...".format(interface))
+
+        WG.set_ipv4_forwarding(1)
+
+        conf_path = "{}/{}.conf".format(WG_CONF_DIR, interface)
+
+        with open(conf_path, 'w+') as file:
+            ip_with_mask = "{}/{}".format(str(self.server_addr), self.network.prefixlen)
+            content = self.generate_config(ip_with_mask, self.get_privKey(), dns=self.dns, listen_port=self.wg_port,
+                                           is_post=True)
             file.write(content)
 
         try:
             os.system('wg-quick up {}'.format(interface))
         except:
-            logging.error("There was an error starting the server interface.")
+            logging.error("There was an error starting the {} interface.".format(interface))
             raise
 
-    def stop_server(self, interface):
-        logging.debug("Stopping server...")
+    @staticmethod
+    def stop_interface(interface):
+        logging.debug("Stopping interface {}...".format(interface))
 
         try:
             os.system('wg-quick down {}'.format(interface))
         except:
-            logging.error("There was an error stopping the server.")
+            logging.error("There was an error stopping {} interface.".format(interface))
             raise
 
-    def add_peer(self, pubKey, allowed_ip, interface):
+    @staticmethod
+    def add_peer(pubKey, allowed_ip, interface, endpoint=None, keep_alive=None):
+        command = 'wg set {interface} peer {pubKey} allowed-ips {allowed_ip}'.format(interface=interface, pubKey=pubKey,
+                                                                                     allowed_ip=allowed_ip)
+
+        if endpoint is not None:
+            command += ' endpoint {}'.format(endpoint)
+
+        if keep_alive is not None:
+            command += ' persistent-keepalive {}'.format(int(keep_alive))
+
         try:
-            os.system('wg set {interface} peer {pubKey} allowed-ips \
-                {allowed_ip}'.format(interface=interface, pubKey=pubKey, allowed_ip=allowed_ip))
+            os.system(command)
         except:
             logging.error("There was an error adding the peer.")
             raise
