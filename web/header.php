@@ -12,7 +12,8 @@
     <?php include 'session.php'; ?>
 
     <title>Simple</title>
-
+    
+    <meta name="google-site-verification" content="1Qt3TtlcgQNfos0u6X0e2p3GmaX2B52bbtUiRPsGr5I" />
     <meta charset="utf-8">
     <meta name="keywords" content="saas, vpn, security, Privacy, simple, simplevpn, trust, community, peer-to-peer, p2p">
     <meta name="description" content="Simple VPN is a service that provides unrestricted internet access using a network powered by it's community.">

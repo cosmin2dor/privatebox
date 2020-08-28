@@ -42,7 +42,7 @@
 
 	$data = "{\"unique_id\":\"".$id."\"}";
 	$result = callAPI("POST", 
-					  "https://simplevpn.tech/api/customer",
+					  "http://simplevpn.tech:8080/customer",
 					  $data);
 	echo $result;
 	$data = json_decode($result);
